@@ -1,6 +1,6 @@
 @SWToolBox_api_HostAddress = http://localhost:5178
 
-GET {{SWToolBox_api_HostAddress}}/weatherforecast/
+GET {{SWToolBox_api_HostAddress}}/api/attribute
 Accept: application/json
 
 ###
