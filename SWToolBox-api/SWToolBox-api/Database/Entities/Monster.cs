@@ -9,9 +9,13 @@ public partial class Monster
 
     public string Name { get; set; } = null!;
 
-    public long? LeaderId { get; set; }
-
     public long AttributeId { get; set; }
+
+    public bool IsNat5 { get; set; }
+
+    public string? BaseName { get; set; }
+
+    public Guid? LeaderId { get; set; }
 
     public virtual Attribute Attribute { get; set; } = null!;
 

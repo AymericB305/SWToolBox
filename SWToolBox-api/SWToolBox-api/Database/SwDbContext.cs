@@ -1,5 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using SWToolBox_api.Database.Entities;
+using Attribute = SWToolBox_api.Database.Entities.Attribute;
+using Type = SWToolBox_api.Database.Entities.Type;
 
 namespace SWToolBox_api.Database;
 
@@ -10,7 +14,7 @@ public partial class SwDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Entities.Attribute> Attributes { get; set; }
+    public virtual DbSet<Attribute> Attributes { get; set; }
 
     public virtual DbSet<Defense> Defenses { get; set; }
 
@@ -20,13 +24,15 @@ public partial class SwDbContext : DbContext
 
     public virtual DbSet<LeaderSkill> LeaderSkills { get; set; }
 
+    public virtual DbSet<LeaderType> LeaderTypes { get; set; }
+
     public virtual DbSet<Monster> Monsters { get; set; }
 
     public virtual DbSet<Player> Players { get; set; }
 
     public virtual DbSet<PlayerDefense> PlayerDefenses { get; set; }
 
-    public virtual DbSet<Entities.Type> Types { get; set; }
+    public virtual DbSet<Type> Types { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,7 +54,7 @@ public partial class SwDbContext : DbContext
             .HasPostgresExtension("pgsodium", "pgsodium")
             .HasPostgresExtension("vault", "supabase_vault");
 
-        modelBuilder.Entity<Entities.Attribute>(entity =>
+        modelBuilder.Entity<Attribute>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("attribute_pkey");
 
@@ -59,12 +65,7 @@ public partial class SwDbContext : DbContext
             entity.HasIndex(e => e.Name, "attribute_name_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AdvantageAgainstId).HasColumnName("advantage_against_id");
             entity.Property(e => e.Name).HasColumnName("name");
-
-            entity.HasOne(d => d.AdvantageAgainst).WithMany(p => p.InverseAdvantageAgainst)
-                .HasForeignKey(d => d.AdvantageAgainstId)
-                .HasConstraintName("attribute_advantage_against_fkey");
         });
 
         modelBuilder.Entity<Defense>(entity =>
@@ -141,16 +142,34 @@ public partial class SwDbContext : DbContext
 
             entity.ToTable("leader_skill");
 
-            entity.HasIndex(e => e.Id, "leader_skill_id_key").IsUnique();
+            entity.HasIndex(e => e.Id, "leader_skill_newId_key").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("gen_random_uuid()")
+                .HasColumnName("id");
+            entity.Property(e => e.LeaderTypeId).HasColumnName("leader_type_id");
             entity.Property(e => e.TypeId).HasColumnName("type_id");
             entity.Property(e => e.Value).HasColumnName("value");
+
+            entity.HasOne(d => d.LeaderType).WithMany(p => p.LeaderSkills)
+                .HasForeignKey(d => d.LeaderTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("leader_skill_leader_type_id_fkey");
 
             entity.HasOne(d => d.Type).WithMany(p => p.LeaderSkills)
                 .HasForeignKey(d => d.TypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("leader_skill_type_fkey");
+        });
+
+        modelBuilder.Entity<LeaderType>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("leader_type_pkey");
+
+            entity.ToTable("leader_type");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Name).HasColumnName("name");
         });
 
         modelBuilder.Entity<Monster>(entity =>
@@ -161,10 +180,12 @@ public partial class SwDbContext : DbContext
 
             entity.HasIndex(e => e.Id, "monster_id_key").IsUnique();
 
-            entity.HasIndex(e => e.Name, "monster_name_key").IsUnique();
-
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AttributeId).HasColumnName("attribute_id");
+            entity.Property(e => e.BaseName).HasColumnName("base_name");
+            entity.Property(e => e.IsNat5)
+                .HasDefaultValue(false)
+                .HasColumnName("is_nat_5");
             entity.Property(e => e.LeaderId).HasColumnName("leader_id");
             entity.Property(e => e.Name).HasColumnName("name");
 
@@ -219,7 +240,7 @@ public partial class SwDbContext : DbContext
                 .HasConstraintName("player_defense_player_id_fkey");
         });
 
-        modelBuilder.Entity<Entities.Type>(entity =>
+        modelBuilder.Entity<Type>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("type_pkey");
 
