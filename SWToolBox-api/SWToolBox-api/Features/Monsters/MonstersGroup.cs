@@ -6,6 +6,9 @@ public sealed class MonstersGroup : Group
 {
     public MonstersGroup()
     {
-        Configure("monsters", ep => {});
+        Configure("monsters", ep =>
+        {
+            ep.AllowAnonymous();
+        });
     }    
 }

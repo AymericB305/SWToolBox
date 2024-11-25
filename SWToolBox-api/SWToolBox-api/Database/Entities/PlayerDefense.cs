@@ -9,9 +9,9 @@ public partial class PlayerDefense
 
     public Guid DefenseId { get; set; }
 
-    public short? Wins { get; set; }
+    public short Wins { get; set; }
 
-    public short? Losses { get; set; }
+    public short Losses { get; set; }
 
     public string Name { get; set; } = null!;
 

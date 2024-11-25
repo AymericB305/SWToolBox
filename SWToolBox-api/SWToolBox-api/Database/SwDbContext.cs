@@ -226,8 +226,12 @@ public partial class SwDbContext : DbContext
             entity.Property(e => e.Name)
                 .HasDefaultValueSql("''::text")
                 .HasColumnName("name");
-            entity.Property(e => e.Losses).HasColumnName("losses");
-            entity.Property(e => e.Wins).HasColumnName("wins");
+            entity.Property(e => e.Losses)
+                .HasDefaultValueSql("'0'::smallint")
+                .HasColumnName("losses");
+            entity.Property(e => e.Wins)
+                .HasDefaultValueSql("'0'::smallint")
+                .HasColumnName("wins");
 
             entity.HasOne(d => d.Defense).WithMany(p => p.PlayerDefenses)
                 .HasForeignKey(d => d.DefenseId)
