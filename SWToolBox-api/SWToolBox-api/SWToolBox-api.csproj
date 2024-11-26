@@ -22,7 +22,6 @@
 
     <ItemGroup>
       <Folder Include="Database\" />
-      <Folder Include="Features\Players\" />
     </ItemGroup>
 
 </Project>

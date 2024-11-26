@@ -6,12 +6,16 @@ namespace SWToolBox_api.Features.Guilds.DeleteGuild;
 
 [Group<GuildsGroup>]
 [HttpDelete("${id:guid}")]
-public class DeleteGuildEndpoint(ISender sender) : Endpoint<DeleteGuildRequest, EmptyHttpResult>
+public class DeleteGuildEndpoint(ISender sender) : Endpoint<DeleteGuildRequest, Ok<DeleteGuildResponse>>
 {
-    public override async Task<EmptyHttpResult> ExecuteAsync(DeleteGuildRequest req, CancellationToken ct)
+    public override async Task<Ok<DeleteGuildResponse>> ExecuteAsync(DeleteGuildRequest req, CancellationToken ct)
     {
-        await sender.Send(req.ToCommand(), ct);
+        var isSuccess = await sender.Send(req.ToCommand(), ct);
         
-        return TypedResults.Empty;
+        string? errorMessage = isSuccess
+            ? null
+            : "Guild could not be deleted.";
+        
+        return TypedResults.Ok(new DeleteGuildResponse(isSuccess, errorMessage));
     }
 }

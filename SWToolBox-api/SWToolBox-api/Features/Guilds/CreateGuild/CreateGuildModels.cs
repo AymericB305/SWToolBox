@@ -5,7 +5,9 @@ using SWToolBox_api.Database.Entities;
 namespace SWToolBox_api.Features.Guilds.CreateGuild;
 
 public record CreateGuildRequest(string Name);
-public record CreateGuildResponse(Guid Id, string Name);
+
+public record CreateGuildDto(Guid Id, string Name, bool IsSuccess, string? ErrorMessage);
+public record CreateGuildResponse(Guid Id, string Name, bool IsSuccess, string? ErrorMessage);
 
 public class CreateGuildValidator : Validator<CreateGuildRequest>
 {
@@ -21,21 +23,26 @@ public class CreateGuildValidator : Validator<CreateGuildRequest>
 
 public static class CreateGuildMapper
 {
-    public static CreateGuildCommand ToCommand(this CreateGuildRequest r)
+    public static CreateGuildCommand ToCommand(this CreateGuildRequest request)
     {
-        return new CreateGuildCommand(r.Name);
+        return new CreateGuildCommand(request.Name);
     }
     
-    public static Guild ToEntity(this CreateGuildCommand r)
+    public static Guild ToEntity(this CreateGuildCommand command)
     {
-        return new Guild()
+        return new Guild
         {
-            Name = r.Name,
+            Name = command.Name,
         };
     }
 
-    public static CreateGuildResponse ToResponse(this Guild e)
+    public static CreateGuildDto ToDto(this Guild guild, bool isSuccess, string? errorMessage = null)
     {
-        return new CreateGuildResponse(e.Id, e.Name);
+        return new CreateGuildDto(guild.Id, guild.Name, isSuccess, errorMessage);
+    }
+
+    public static CreateGuildResponse ToResponse(this CreateGuildDto dto)
+    {
+        return new CreateGuildResponse(dto.Id, dto.Name, dto.IsSuccess, dto.ErrorMessage);
     }
 }

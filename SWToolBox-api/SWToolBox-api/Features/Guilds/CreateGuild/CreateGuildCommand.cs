@@ -1,17 +1,24 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SWToolBox_api.Database;
-using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.CreateGuild;
 
-public record CreateGuildCommand(string Name) : IRequest<Guild>;
+public record CreateGuildCommand(string Name) : IRequest<CreateGuildDto>;
 
-internal sealed class CreateGuildHandler(SwDbContext context) : IRequestHandler<CreateGuildCommand, Guild>
+internal sealed class CreateGuildHandler(SwDbContext context) : IRequestHandler<CreateGuildCommand, CreateGuildDto>
 {
-    public async Task<Guild> Handle(CreateGuildCommand request, CancellationToken cancellationToken)
+    public async Task<CreateGuildDto> Handle(CreateGuildCommand request, CancellationToken cancellationToken)
     {
-        var guild = await context.Guilds.AddAsync(request.ToEntity(), cancellationToken);
+        var existingGuild = await context.Guilds.FirstOrDefaultAsync(g => g.Name == request.Name, cancellationToken);
+
+        if (existingGuild is not null)
+        {
+            return existingGuild.ToDto(false, $"A Guild with the name {request.Name} already exists.");
+        }
         
-        return guild.Entity;
+        var guild = await context.Guilds.AddAsync(request.ToEntity(), cancellationToken);
+
+        return guild.Entity.ToDto(true);
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace SWToolBox_api.Features.Guilds.DeleteGuild;
 
 public record DeleteGuildRequest(Guid Id);
+public record DeleteGuildResponse(bool IsSuccess, string? ErrorMessage);
 
 public static class DeleteGuildMapper
 {
