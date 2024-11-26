@@ -5,7 +5,6 @@ using SWToolBox_api.Database.Entities;
 namespace SWToolBox_api.Features.Guilds.CreateGuild;
 
 public record CreateGuildRequest(string Name);
-
 public record CreateGuildDto(Guid Id, string Name, bool IsSuccess, string? ErrorMessage);
 public record CreateGuildResponse(Guid Id, string Name, bool IsSuccess, string? ErrorMessage);
 
