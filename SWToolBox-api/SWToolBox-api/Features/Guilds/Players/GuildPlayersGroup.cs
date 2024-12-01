@@ -2,9 +2,9 @@
 
 namespace SWToolBox_api.Features.Guilds.Players;
 
-public sealed class PlayersGroup : SubGroup<GuildsGroup>
+public sealed class GuildPlayersGroup : SubGroup<GuildsGroup>
 {
-    public PlayersGroup()
+    public GuildPlayersGroup()
     {
         Configure("{guildId:guid}/players", ep =>
         {

@@ -9,7 +9,7 @@ public partial class Monster
 
     public string Name { get; set; } = null!;
 
-    public long AttributeId { get; set; }
+    public long ElementId { get; set; }
 
     public bool IsNat5 { get; set; }
 
@@ -17,13 +17,13 @@ public partial class Monster
 
     public Guid? LeaderId { get; set; }
 
-    public virtual Attribute Attribute { get; set; } = null!;
-
     public virtual ICollection<Defense> DefenseMonster2s { get; set; } = new List<Defense>();
 
     public virtual ICollection<Defense> DefenseMonster3s { get; set; } = new List<Defense>();
 
     public virtual ICollection<Defense> DefenseMonsterLeads { get; set; } = new List<Defense>();
+
+    public virtual Element Element { get; set; } = null!;
 
     public virtual LeaderSkill? Leader { get; set; }
 }

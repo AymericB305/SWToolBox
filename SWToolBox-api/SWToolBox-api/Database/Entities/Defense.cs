@@ -20,4 +20,6 @@ public partial class Defense
     public virtual Monster MonsterLead { get; set; } = null!;
 
     public virtual ICollection<PlayerDefense> PlayerDefenses { get; set; } = new List<PlayerDefense>();
+
+    public virtual ICollection<Guild> Guilds { get; set; } = new List<Guild>();
 }

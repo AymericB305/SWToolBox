@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SWToolBox_api.Database.Entities;
-using Attribute = SWToolBox_api.Database.Entities.Attribute;
-using Type = SWToolBox_api.Database.Entities.Type;
 
 namespace SWToolBox_api.Database;
 
@@ -14,9 +12,11 @@ public partial class SwDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Attribute> Attributes { get; set; }
+    public virtual DbSet<Area> Areas { get; set; }
 
     public virtual DbSet<Defense> Defenses { get; set; }
+
+    public virtual DbSet<Element> Elements { get; set; }
 
     public virtual DbSet<Guild> Guilds { get; set; }
 
@@ -31,8 +31,6 @@ public partial class SwDbContext : DbContext
     public virtual DbSet<Player> Players { get; set; }
 
     public virtual DbSet<PlayerDefense> PlayerDefenses { get; set; }
-
-    public virtual DbSet<Type> Types { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -54,15 +52,11 @@ public partial class SwDbContext : DbContext
             .HasPostgresExtension("pgsodium", "pgsodium")
             .HasPostgresExtension("vault", "supabase_vault");
 
-        modelBuilder.Entity<Attribute>(entity =>
+        modelBuilder.Entity<Area>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("attribute_pkey");
+            entity.HasKey(e => e.Id).HasName("leader_type_pkey");
 
-            entity.ToTable("attribute");
-
-            entity.HasIndex(e => e.Id, "attribute_id_key").IsUnique();
-
-            entity.HasIndex(e => e.Name, "attribute_name_key").IsUnique();
+            entity.ToTable("area");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name).HasColumnName("name");
@@ -97,6 +91,20 @@ public partial class SwDbContext : DbContext
                 .HasConstraintName("defense_monster_1_id_fkey");
         });
 
+        modelBuilder.Entity<Element>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("attribute_pkey");
+
+            entity.ToTable("element");
+
+            entity.HasIndex(e => e.Id, "attribute_id_key").IsUnique();
+
+            entity.HasIndex(e => e.Name, "attribute_name_key").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Name).HasColumnName("name");
+        });
+
         modelBuilder.Entity<Guild>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("guild_pkey");
@@ -107,6 +115,25 @@ public partial class SwDbContext : DbContext
                 .HasDefaultValueSql("gen_random_uuid()")
                 .HasColumnName("id");
             entity.Property(e => e.Name).HasColumnName("name");
+
+            entity.HasMany(d => d.Defenses).WithMany(p => p.Guilds)
+                .UsingEntity<Dictionary<string, object>>(
+                    "GuildDefense",
+                    r => r.HasOne<Defense>().WithMany()
+                        .HasForeignKey("DefenseId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("guild_defense_defense_id_fkey"),
+                    l => l.HasOne<Guild>().WithMany()
+                        .HasForeignKey("GuildId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("guild_defense_guild_id_fkey"),
+                    j =>
+                    {
+                        j.HasKey("GuildId", "DefenseId").HasName("guild_defense_pkey");
+                        j.ToTable("guild_defense");
+                        j.IndexerProperty<Guid>("GuildId").HasColumnName("guild_id");
+                        j.IndexerProperty<Guid>("DefenseId").HasColumnName("defense_id");
+                    });
         });
 
         modelBuilder.Entity<GuildPlayer>(entity =>
@@ -147,26 +174,28 @@ public partial class SwDbContext : DbContext
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("gen_random_uuid()")
                 .HasColumnName("id");
+            entity.Property(e => e.AreaId).HasColumnName("area_id");
             entity.Property(e => e.LeaderTypeId).HasColumnName("leader_type_id");
-            entity.Property(e => e.TypeId).HasColumnName("type_id");
             entity.Property(e => e.Value).HasColumnName("value");
 
-            entity.HasOne(d => d.LeaderType).WithMany(p => p.LeaderSkills)
-                .HasForeignKey(d => d.LeaderTypeId)
+            entity.HasOne(d => d.Area).WithMany(p => p.LeaderSkills)
+                .HasForeignKey(d => d.AreaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("leader_skill_leader_type_id_fkey");
 
-            entity.HasOne(d => d.Type).WithMany(p => p.LeaderSkills)
-                .HasForeignKey(d => d.TypeId)
+            entity.HasOne(d => d.LeaderType).WithMany(p => p.LeaderSkills)
+                .HasForeignKey(d => d.LeaderTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("leader_skill_type_fkey");
         });
 
         modelBuilder.Entity<LeaderType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("leader_type_pkey");
+            entity.HasKey(e => e.Id).HasName("type_pkey");
 
             entity.ToTable("leader_type");
+
+            entity.HasIndex(e => e.Id, "type_id_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name).HasColumnName("name");
@@ -181,16 +210,16 @@ public partial class SwDbContext : DbContext
             entity.HasIndex(e => e.Id, "monster_id_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AttributeId).HasColumnName("attribute_id");
             entity.Property(e => e.BaseName).HasColumnName("base_name");
+            entity.Property(e => e.ElementId).HasColumnName("element_id");
             entity.Property(e => e.IsNat5)
                 .HasDefaultValue(false)
                 .HasColumnName("is_nat_5");
             entity.Property(e => e.LeaderId).HasColumnName("leader_id");
             entity.Property(e => e.Name).HasColumnName("name");
 
-            entity.HasOne(d => d.Attribute).WithMany(p => p.Monsters)
-                .HasForeignKey(d => d.AttributeId)
+            entity.HasOne(d => d.Element).WithMany(p => p.Monsters)
+                .HasForeignKey(d => d.ElementId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("monster_attribute_id_fkey");
 
@@ -242,18 +271,6 @@ public partial class SwDbContext : DbContext
                 .HasForeignKey(d => d.PlayerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("player_defense_player_id_fkey");
-        });
-
-        modelBuilder.Entity<Type>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("type_pkey");
-
-            entity.ToTable("type");
-
-            entity.HasIndex(e => e.Id, "type_id_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Name).HasColumnName("name");
         });
 
         OnModelCreatingPartial(modelBuilder);

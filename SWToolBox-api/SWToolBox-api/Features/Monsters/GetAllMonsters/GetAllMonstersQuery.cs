@@ -15,10 +15,10 @@ internal sealed class GetAllMonstersHandler(SwDbContext context)
         return await context
             .Monsters
             .Include(m => m.Leader)
-                .ThenInclude(l => l!.Type)
-            .Include(m => m.Leader)
                 .ThenInclude(l => l!.LeaderType)
-            .Include(m => m.Attribute)
+            .Include(m => m.Leader)
+                .ThenInclude(l => l!.Area)
+            .Include(m => m.Element)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }

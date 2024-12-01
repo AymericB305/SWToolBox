@@ -4,8 +4,8 @@ using SWToolBox_api.Database.Entities;
 namespace SWToolBox_api.Features.Monsters.GetAllMonsters;
 
 public record GetAllMonstersResponse(IEnumerable<MonsterResponse> Monsters);
-public record MonsterResponse(long Id, string Name, string Attribute, MonsterResponseLeaderSkill? LeaderSkill);
-public record MonsterResponseLeaderSkill(Guid Id, int Value, string Type, string LeaderType);
+public record MonsterResponse(long Id, string Name, string Element, MonsterResponseLeaderSkill? LeaderSkill);
+public record MonsterResponseLeaderSkill(Guid Id, int Value, string LeaderType, string Area);
 
 public static class GetAllMonstersMapper
 {
@@ -23,26 +23,26 @@ public static class GetAllMonstersMapper
             return new MonsterResponse(
                 monster.Id,
                 monster.Name,
-                monster.Attribute.Name,
+                monster.Element.Name,
                 leaderSkill
             );
         }
 
-        var leaderType = monster.Leader.LeaderType.Name == "Element"
-            ? monster.Attribute.Name
+        var area = monster.Leader.LeaderType.Name == "Element"
+            ? monster.Element.Name
             : monster.Leader.LeaderType.Name;
             
         leaderSkill = new MonsterResponseLeaderSkill(
             monster.Leader.Id,
             monster.Leader.Value,
-            monster.Leader.Type.Name,
-            leaderType
+            monster.Leader.LeaderType.Name,
+            area
         );
 
         return new MonsterResponse(
             monster.Id,
             monster.Name,
-            monster.Attribute.Name,
+            monster.Element.Name,
             leaderSkill
         );
     }
