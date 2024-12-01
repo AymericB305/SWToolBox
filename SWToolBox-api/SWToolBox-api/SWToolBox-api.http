@@ -1,6 +1,28 @@
 @SWToolBox_api_HostAddress = http://localhost:5178
 
-GET {{SWToolBox_api_HostAddress}}/api/v1/monsters
+@guilds = {{SWToolBox_api_HostAddress}}/api/v1/guilds
+
+POST {{guilds}}
 Accept: application/json
+Content-Type: application/json
+
+{
+ "name": "Totototo"
+}
+
+###
+
+GET {{guilds}}
+Accept: application/json
+
+###
+
+POST {{guilds}}/a0bfef78-2af1-4722-85d3-950c333c98de/players
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Bric305"
+}
 
 ###

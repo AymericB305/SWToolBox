@@ -18,7 +18,8 @@ internal sealed class CreateGuildHandler(SwDbContext context) : IRequestHandler<
         }
         
         var guild = await context.Guilds.AddAsync(request.ToEntity(), cancellationToken);
-
+        await context.SaveChangesAsync(cancellationToken);
+        
         return guild.Entity.ToDto(true);
     }
 }

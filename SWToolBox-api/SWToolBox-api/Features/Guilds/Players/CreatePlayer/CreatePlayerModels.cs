@@ -1,10 +1,11 @@
 ﻿using FastEndpoints;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using SWToolBox_api.Database.Entities;
 
-namespace SWToolBox_api.Features.Players.CreatePlayer;
+namespace SWToolBox_api.Features.Guilds.Players.CreatePlayer;
 
-public record CreatePlayerRequest(string Name);
+public record CreatePlayerRequest([FromRoute] Guid GuildId, string Name);
 public record CreatePlayerDto(Guid Id, string Name, bool IsSuccess, string? ErrorMessage);
 public record CreatePlayerResponse(Guid Id, string Name, bool IsSuccess, string? ErrorMessage);
 
@@ -24,7 +25,7 @@ public static class CreatePlayerMapper
 {
     public static CreatePlayerCommand ToCommand(this CreatePlayerRequest request)
     {
-        return new CreatePlayerCommand(request.Name);
+        return new CreatePlayerCommand(request.Name, request.GuildId);
     }
     
     public static Player ToEntity(this CreatePlayerCommand command)
