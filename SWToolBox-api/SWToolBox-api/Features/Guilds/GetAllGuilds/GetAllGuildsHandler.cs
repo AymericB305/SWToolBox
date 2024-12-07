@@ -5,8 +5,6 @@ using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.GetAllGuilds;
 
-public record GetAllGuildsQuery : IRequest<IEnumerable<Guild>>;
-
 internal sealed class GetAllGuildsHandler(SwDbContext context)
     : IRequestHandler<GetAllGuildsQuery, IEnumerable<Guild>>
 {

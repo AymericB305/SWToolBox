@@ -1,8 +1,11 @@
-﻿using SWToolBox_api.Database.Entities;
+﻿using MediatR;
+using OneOf;
+using OneOf.Types;
+using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.GetGuildById;
 
-public record GetGuildByIdRequest(Guid Id);
+public record GetGuildByIdQuery(Guid Id) : IRequest<OneOf<Guild, NotFound>>;
 public record GetGuildByIdResponse(Guid Id, string Name, IEnumerable<PlayerResponse> Players);
 public record PlayerResponse(Guid Id, string Name, IEnumerable<DefenseResponse> Defenses);
 public record DefenseResponse(MonsterResponse MonsterLead, MonsterResponse Monster2, MonsterResponse Monster3, short Wins, short? Losses);
@@ -10,10 +13,6 @@ public record MonsterResponse(long Id, string Name);
 
 public static class GetGuildByIdMapper
 {
-    public static GetGuildByIdQuery ToQuery(this GetGuildByIdRequest request)
-    {
-        return new GetGuildByIdQuery(request.Id);
-    }
 
     public static GetGuildByIdResponse ToResponse(this Guild guild)
     {

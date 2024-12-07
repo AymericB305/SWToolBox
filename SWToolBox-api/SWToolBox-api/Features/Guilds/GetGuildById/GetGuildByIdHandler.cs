@@ -1,17 +1,17 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OneOf;
+using OneOf.Types;
 using SWToolBox_api.Database;
 using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.GetGuildById;
 
-public record GetGuildByIdQuery(Guid Id) : IRequest<Guild?>;
-
-internal sealed class GetGuildByIdHandler(SwDbContext context) : IRequestHandler<GetGuildByIdQuery, Guild?>
+internal sealed class GetGuildByIdHandler(SwDbContext context) : IRequestHandler<GetGuildByIdQuery, OneOf<Guild, NotFound>>
 {
-    public async Task<Guild?> Handle(GetGuildByIdQuery request, CancellationToken cancellationToken)
+    public async Task<OneOf<Guild, NotFound>> Handle(GetGuildByIdQuery request, CancellationToken cancellationToken)
     {
-        return await context
+        var guild = await context
             .Guilds
             .Include(g => g.GuildPlayers)
                 .ThenInclude(gp => gp.Player)
@@ -30,5 +30,12 @@ internal sealed class GetGuildByIdHandler(SwDbContext context) : IRequestHandler
                             .ThenInclude(pd => pd.Monster3)
             .AsNoTracking()
             .FirstOrDefaultAsync(g => g.Id == request.Id, cancellationToken);
+
+        if (guild is null)
+        {
+            return new NotFound();
+        }
+
+        return guild;
     }
 }

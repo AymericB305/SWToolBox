@@ -1,15 +1,17 @@
 ﻿using FastEndpoints;
 using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OneOf;
+using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.Players.CreatePlayer;
 
-public record CreatePlayerRequest([FromRoute] Guid GuildId, string Name);
-public record CreatePlayerDto(Guid Id, string Name, bool IsSuccess, string? ErrorMessage);
-public record CreatePlayerResponse(Guid Id, string Name, bool IsSuccess, string? ErrorMessage);
+public record CreatePlayerCommand([FromRoute] Guid GuildId, string Name) : IRequest<OneOf<Player, Existing>>;
+public record CreatePlayerResponse(Guid Id, string Name);
 
-public class CreatePlayerValidator : Validator<CreatePlayerRequest>
+public class CreatePlayerValidator : Validator<CreatePlayerCommand>
 {
     public CreatePlayerValidator()
     {
@@ -23,11 +25,6 @@ public class CreatePlayerValidator : Validator<CreatePlayerRequest>
 
 public static class CreatePlayerMapper
 {
-    public static CreatePlayerCommand ToCommand(this CreatePlayerRequest request)
-    {
-        return new CreatePlayerCommand(request.Name, request.GuildId);
-    }
-    
     public static Player ToEntity(this CreatePlayerCommand command)
     {
         return new Player
@@ -36,13 +33,8 @@ public static class CreatePlayerMapper
         };
     }
 
-    public static CreatePlayerDto ToDto(this Player player, bool isSuccess, string? errorMessage = null)
+    public static CreatePlayerResponse ToResponse(this Player player)
     {
-        return new CreatePlayerDto(player.Id, player.Name, isSuccess, errorMessage);
-    }
-
-    public static CreatePlayerResponse ToResponse(this CreatePlayerDto dto)
-    {
-        return new CreatePlayerResponse(dto.Id, dto.Name, dto.IsSuccess, dto.ErrorMessage);
+        return new CreatePlayerResponse(player.Id, player.Name);
     }
 }

@@ -7,17 +7,15 @@ namespace SWToolBox_api.Features.Guilds.GetGuildById;
 
 [HttpGet("${id:guid}")]
 [Group<GuildsGroup>]
-public class GetGuildByIdEndpoint(ISender sender) : Endpoint<GetGuildByIdRequest, Results<Ok<GetGuildByIdResponse>, NotFound>>
+public class GetGuildByIdEndpoint(ISender sender) : Endpoint<GetGuildByIdQuery, Results<Ok<GetGuildByIdResponse>, NotFound>>
 {
-    public override async Task<Results<Ok<GetGuildByIdResponse>, NotFound>> ExecuteAsync(GetGuildByIdRequest req, CancellationToken ct)
+    public override async Task<Results<Ok<GetGuildByIdResponse>, NotFound>> ExecuteAsync(GetGuildByIdQuery req, CancellationToken ct)
     {
-        var guild = await sender.Send(req.ToQuery(), ct);
+        var guildOrNotFound = await sender.Send(req, ct);
 
-        if (guild is null)
-        {
-            return TypedResults.NotFound();
-        }
-
-        return TypedResults.Ok(guild.ToResponse());
+        return guildOrNotFound.Match<Results<Ok<GetGuildByIdResponse>, NotFound>>(
+            guild => TypedResults.Ok(guild.ToResponse()),
+            notfound => TypedResults.NotFound()
+        );
     }
 }

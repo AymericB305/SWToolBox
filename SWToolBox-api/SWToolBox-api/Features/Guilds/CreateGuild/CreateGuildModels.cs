@@ -1,14 +1,16 @@
 ﻿using FastEndpoints;
 using FluentValidation;
+using MediatR;
+using OneOf;
+using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.CreateGuild;
 
-public record CreateGuildRequest(string Name);
-public record CreateGuildDto(Guid Id, string Name, bool IsSuccess, string? ErrorMessage);
-public record CreateGuildResponse(Guid Id, string Name, bool IsSuccess, string? ErrorMessage);
+public record CreateGuildCommand(string Name) : IRequest<OneOf<Guild, Existing>>;
+public record CreateGuildResponse(Guid Id, string Name);
 
-public class CreateGuildValidator : Validator<CreateGuildRequest>
+public class CreateGuildValidator : Validator<CreateGuildCommand>
 {
     public CreateGuildValidator()
     {
@@ -22,11 +24,6 @@ public class CreateGuildValidator : Validator<CreateGuildRequest>
 
 public static class CreateGuildMapper
 {
-    public static CreateGuildCommand ToCommand(this CreateGuildRequest request)
-    {
-        return new CreateGuildCommand(request.Name);
-    }
-    
     public static Guild ToEntity(this CreateGuildCommand command)
     {
         return new Guild
@@ -35,13 +32,8 @@ public static class CreateGuildMapper
         };
     }
 
-    public static CreateGuildDto ToDto(this Guild guild, bool isSuccess, string? errorMessage = null)
+    public static CreateGuildResponse ToResponse(this Guild guild)
     {
-        return new CreateGuildDto(guild.Id, guild.Name, isSuccess, errorMessage);
-    }
-
-    public static CreateGuildResponse ToResponse(this CreateGuildDto dto)
-    {
-        return new CreateGuildResponse(dto.Id, dto.Name, dto.IsSuccess, dto.ErrorMessage);
+        return new CreateGuildResponse(guild.Id, guild.Name);
     }
 }

@@ -1,12 +1,8 @@
-﻿namespace SWToolBox_api.Features.Guilds.DeleteGuild;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using OneOf;
+using OneOf.Types;
 
-public record DeleteGuildRequest(Guid Id);
-public record DeleteGuildResponse(bool IsSuccess, string? ErrorMessage);
+namespace SWToolBox_api.Features.Guilds.DeleteGuild;
 
-public static class DeleteGuildMapper
-{
-    public static DeleteGuildCommand ToCommand(this DeleteGuildRequest request)
-    {
-        return new DeleteGuildCommand(request.Id);
-    }
-}
+public record DeleteGuildCommand([FromRoute] Guid Id) : IRequest<OneOf<Success, Error, NotFound>>;
