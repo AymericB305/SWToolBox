@@ -4,6 +4,7 @@ using OneOf;
 using OneOf.Types;
 using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database;
+using NotFound = OneOf.Types.NotFound;
 
 namespace SWToolBox_api.Features.Guilds.Players.RemovePlayerFromGuild;
 

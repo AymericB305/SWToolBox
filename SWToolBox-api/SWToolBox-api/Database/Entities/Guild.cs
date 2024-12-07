@@ -9,7 +9,7 @@ public partial class Guild
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<GuildPlayer> GuildPlayers { get; set; } = new List<GuildPlayer>();
+    public virtual ICollection<GuildDefense> GuildDefenses { get; set; } = new List<GuildDefense>();
 
-    public virtual ICollection<Defense> Defenses { get; set; } = new List<Defense>();
+    public virtual ICollection<GuildPlayer> GuildPlayers { get; set; } = new List<GuildPlayer>();
 }
