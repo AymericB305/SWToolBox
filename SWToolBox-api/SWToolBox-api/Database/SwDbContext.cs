@@ -66,13 +66,15 @@ public partial class SwDbContext : DbContext
 
         modelBuilder.Entity<Defense>(entity =>
         {
-            entity.HasKey(e => e.Uid).HasName("defense_pkey");
+            entity.HasKey(e => e.Id).HasName("defense_pkey");
 
             entity.ToTable("defense");
 
-            entity.Property(e => e.Uid)
+            entity.HasIndex(e => e.Id, "defense_id_key").IsUnique();
+
+            entity.Property(e => e.Id)
                 .HasDefaultValueSql("gen_random_uuid()")
-                .HasColumnName("uid");
+                .HasColumnName("id");
             entity.Property(e => e.Monster2Id).HasColumnName("monster_2_id");
             entity.Property(e => e.Monster3Id).HasColumnName("monster_3_id");
             entity.Property(e => e.MonsterLeadId).HasColumnName("monster_lead_id");
@@ -121,13 +123,16 @@ public partial class SwDbContext : DbContext
 
         modelBuilder.Entity<GuildDefense>(entity =>
         {
-            entity.HasKey(e => new { e.GuildId, e.DefenseId }).HasName("guild_defense_pkey");
+            entity.HasKey(e => e.Id).HasName("guild_defense_pkey");
 
             entity.ToTable("guild_defense");
 
-            entity.Property(e => e.GuildId).HasColumnName("guild_id");
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("gen_random_uuid()")
+                .HasColumnName("id");
             entity.Property(e => e.DefenseId).HasColumnName("defense_id");
             entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.GuildId).HasColumnName("guild_id");
 
             entity.HasOne(d => d.Defense).WithMany(p => p.GuildDefenses)
                 .HasForeignKey(d => d.DefenseId)

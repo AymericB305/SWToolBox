@@ -11,6 +11,8 @@ public partial class GuildDefense
 
     public string Description { get; set; } = null!;
 
+    public Guid Id { get; set; }
+
     public virtual Defense Defense { get; set; } = null!;
 
     public virtual Guild Guild { get; set; } = null!;

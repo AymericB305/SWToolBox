@@ -11,7 +11,7 @@ public partial class Defense
 
     public long Monster3Id { get; set; }
 
-    public Guid Uid { get; set; }
+    public Guid Id { get; set; }
 
     public virtual ICollection<GuildDefense> GuildDefenses { get; set; } = new List<GuildDefense>();
 

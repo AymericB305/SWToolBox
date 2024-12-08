@@ -31,7 +31,7 @@ internal sealed class CreateDefenseHandler(SwDbContext context) : IRequestHandle
         
         var existingGuildDefense = await context.GuildDefenses
             .FirstOrDefaultAsync(gd => gd.GuildId == request.GuildId
-                && gd.DefenseId == defense.Uid, cancellationToken);
+                && gd.DefenseId == defense.Id, cancellationToken);
 
         if (existingGuildDefense is not null)
         {
@@ -42,6 +42,7 @@ internal sealed class CreateDefenseHandler(SwDbContext context) : IRequestHandle
         {
             GuildId = request.GuildId,
             Defense = defense,
+            Description = request.Description,
         }, cancellationToken);
         
         await context.SaveChangesAsync(cancellationToken);
