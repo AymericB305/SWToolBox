@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SWToolBox_api.Database;
 using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.UpdateGuild;
 
-public record UpdateGuildCommand(Guid Id, string Name) : IRequest<UpdateGuildDto?>;
+public record UpdateGuildCommand([FromRoute] Guid Id, string Name) : IRequest<UpdateGuildDto?>;
 
 internal sealed class UpdateGuildHandler(SwDbContext context) : IRequestHandler<UpdateGuildCommand, UpdateGuildDto?>
 {

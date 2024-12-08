@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OneOf.Types;
 using SWToolBox_api.Database.Entities;
@@ -6,7 +7,7 @@ using SWToolBox_api.Features.Guilds.Defenses.CreateDefense;
 
 namespace SWToolBox_api.Features.Guilds.GetGuildById;
 
-public record GetGuildByIdQuery(Guid Id) : IRequest<OneOf<Guild, NotFound>>;
+public record GetGuildByIdQuery([FromRoute] Guid Id) : IRequest<OneOf<Guild, NotFound>>;
 public record GetGuildByIdResponse(Guid Id, string Name, IEnumerable<PlayerResponse> Players, IEnumerable<GuildDefenseResponse> Defenses);
 public record GuildDefenseResponse(DefenseResponse Defense, string Description);
 public record PlayerResponse(Guid Id, string Name, IEnumerable<PlayerDefenseResponse> Defenses);
