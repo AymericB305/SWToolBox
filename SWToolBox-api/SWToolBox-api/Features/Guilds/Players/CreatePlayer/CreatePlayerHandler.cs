@@ -11,26 +11,38 @@ internal sealed class CreatePlayerHandler(SwDbContext context) : IRequestHandler
 {
     public async Task<OneOf<Player, Existing>> Handle(CreatePlayerCommand request, CancellationToken cancellationToken)
     {
-        var existingPlayer = await context
-            .Players
+        var existingPlayer = await context.Players
             .Include(p => p.GuildPlayers)
-                .ThenInclude(gp => gp.Guild)
             .FirstOrDefaultAsync(p => p.Name == request.Name, cancellationToken);
         
         if (existingPlayer is not null)
         {
-            return new Existing();
+            if (existingPlayer.GuildPlayers.Any(gp => gp.GuildId == request.GuildId))
+            {
+                return new Existing();
+            }
+            
+            await AddGuildPlayer(request, existingPlayer, cancellationToken);
+
+            return existingPlayer;
         }
         
         var player = await context.Players.AddAsync(request.ToEntity(), cancellationToken);
+        await AddGuildPlayer(request, player.Entity, cancellationToken);
+        
+        return player.Entity;
+    }
+
+    private async Task AddGuildPlayer(CreatePlayerCommand request,
+        Player existingPlayer, CancellationToken cancellationToken)
+    {
         var guildPlayer = new GuildPlayer
         {
             GuildId = request.GuildId,
-            Player = player.Entity,
+            Player = existingPlayer,
         };
+        
         await context.GuildPlayers.AddAsync(guildPlayer, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
-        
-        return player.Entity;
     }
 }
