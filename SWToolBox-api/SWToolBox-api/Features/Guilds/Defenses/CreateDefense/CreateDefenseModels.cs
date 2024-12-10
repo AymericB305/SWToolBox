@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
+using OneOf.Types;
 using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database.Entities;
-using NotFound = SWToolBox_api.Common.Models.NotFound;
 
 namespace SWToolBox_api.Features.Guilds.Defenses.CreateDefense;
 

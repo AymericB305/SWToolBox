@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
+using OneOf.Types;
 using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database;
 using SWToolBox_api.Database.Entities;
@@ -15,7 +16,7 @@ internal sealed class CreateDefenseHandler(SwDbContext context) : IRequestHandle
 
         if (guild is null)
         {
-            return new NotFound("Guild not found.");
+            return new NotFound();
         }
 
         var defense = await context.Defenses
