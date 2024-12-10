@@ -1,25 +1,19 @@
-﻿using SWToolBox_api.Database.Entities;
+﻿using MediatR;
+using OneOf;
+using SWToolBox_api.Common.Models;
+using SWToolBox_api.Database.Entities;
+using NotFound = OneOf.Types.NotFound;
 
 namespace SWToolBox_api.Features.Guilds.UpdateGuild;
 
-public record UpdateGuildRequest(Guid Id, string Name);
-public record UpdateGuildDto(Guid Id, string Name, bool IsSuccess);
-public record UpdateGuildResponse(Guid Id, string Name, bool IsSuccess);
+public record UpdateGuildCommand(Guid Id, string Name) : IRequest<OneOf<Guild, NotFound, Existing>>;
+public record UpdateGuildResponse(Guid Id, string Name);
 
 public static class UpdateGuildMapper
 {
-    public static UpdateGuildCommand ToCommand(this UpdateGuildRequest request)
-    {
-        return new UpdateGuildCommand(request.Id, request.Name);
-    }
-
-    public static UpdateGuildDto ToDto(this Guild guild, bool isSuccess)
-    {
-        return new UpdateGuildDto(guild.Id, guild.Name, isSuccess);
-    }
     
-    public static UpdateGuildResponse ToResponse(this UpdateGuildDto dto)
+    public static UpdateGuildResponse ToResponse(this Guild guild)
     {
-        return new UpdateGuildResponse(dto.Id, dto.Name, dto.IsSuccess);
+        return new UpdateGuildResponse(guild.Id, guild.Name);
     }
 }

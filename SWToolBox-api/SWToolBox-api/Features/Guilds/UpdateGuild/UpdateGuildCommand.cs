@@ -1,34 +1,34 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OneOf;
+using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database;
 using SWToolBox_api.Database.Entities;
+using NotFound = OneOf.Types.NotFound;
 
 namespace SWToolBox_api.Features.Guilds.UpdateGuild;
 
-public record UpdateGuildCommand([FromRoute] Guid Id, string Name) : IRequest<UpdateGuildDto?>;
-
-internal sealed class UpdateGuildHandler(SwDbContext context) : IRequestHandler<UpdateGuildCommand, UpdateGuildDto?>
+internal sealed class UpdateGuildHandler(SwDbContext context) : IRequestHandler<UpdateGuildCommand, OneOf<Guild, NotFound, Existing>>
 {
-    public async Task<UpdateGuildDto?> Handle(UpdateGuildCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<Guild, NotFound, Existing>> Handle(UpdateGuildCommand request, CancellationToken cancellationToken)
     {
         var existingGuild = await context.Guilds.FirstOrDefaultAsync(g => g.Id == request.Id, cancellationToken);
 
         if (existingGuild is null)
         {
-            return null;
+            return new NotFound();
         }
         
         var existingGuildName = await context.Guilds.FirstOrDefaultAsync(g => g.Name == existingGuild.Name, cancellationToken);
 
         if (existingGuildName is not null)
         {
-            return existingGuildName.ToDto(false);
+            return new Existing();
         }
         
         existingGuild.Name = request.Name;
         await context.SaveChangesAsync(cancellationToken);
         
-        return existingGuild.ToDto(true);
+        return existingGuild;
     }
 }

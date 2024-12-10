@@ -6,17 +6,16 @@ namespace SWToolBox_api.Features.Guilds.UpdateGuild;
 
 [HttpPut("{id:guid}")]
 [Group<GuildsGroup>]
-public class UpdateGuildEndpoint(ISender sender) : Endpoint<UpdateGuildRequest, Results<Ok<UpdateGuildResponse>, NotFound>>
+public class UpdateGuildEndpoint(ISender sender) : Endpoint<UpdateGuildCommand, Results<Ok<UpdateGuildResponse>, NotFound, Conflict<string>>>
 {
-    public override async Task<Results<Ok<UpdateGuildResponse>, NotFound>> ExecuteAsync(UpdateGuildRequest req, CancellationToken ct)
+    public override async Task<Results<Ok<UpdateGuildResponse>, NotFound, Conflict<string>>> ExecuteAsync(UpdateGuildCommand req, CancellationToken ct)
     {
-        var guild = await sender.Send(req.ToCommand(), ct);
+        var guildOrNotFoundOrExisting = await sender.Send(req, ct);
 
-        if (guild is null)
-        {
-            return TypedResults.NotFound();
-        }
-
-        return TypedResults.Ok(guild.ToResponse());
+        return guildOrNotFoundOrExisting.Match<Results<Ok<UpdateGuildResponse>, NotFound, Conflict<string>>>(
+            guild => TypedResults.Ok(guild.ToResponse()),
+            notFound => TypedResults.NotFound(),
+            existing => TypedResults.Conflict($"A Guild with the name {req.Name} already exists.")
+        );
     }
 }

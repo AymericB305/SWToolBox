@@ -9,7 +9,7 @@ namespace SWToolBox_api.Features.Guilds.Defenses.UpdateDefense;
 public record UpdateDefenseCommand([FromRoute] Guid GuildId, [FromRoute] Guid Id, long MonsterLeadId, long Monster2Id, long Monster3Id, string Description)
     : IRequest<OneOf<GuildDefense, NotFound>>;
 public record UpdateDefenseResponse(DefenseResponse Defense, string Description);
-public record DefenseResponse(MonsterResponse MonsterLead, MonsterResponse Monster2, MonsterResponse Monster3);
+public record DefenseResponse(Guid Id, MonsterResponse MonsterLead, MonsterResponse Monster2, MonsterResponse Monster3);
 public record MonsterResponse(long Id, string Name);
 
 public static class UpdateDefenseMapper
@@ -22,6 +22,7 @@ public static class UpdateDefenseMapper
     private static DefenseResponse ToResponse(this Defense defense)
     {
         return new DefenseResponse(
+            defense.Id,
             defense.MonsterLead.ToResponse(),
             defense.Monster2.ToResponse(),
             defense.Monster3.ToResponse()
