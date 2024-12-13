@@ -13,7 +13,11 @@ public partial class Defense
 
     public Guid Id { get; set; }
 
-    public virtual ICollection<GuildDefense> GuildDefenses { get; set; } = new List<GuildDefense>();
+    public string Description { get; set; } = null!;
+
+    public Guid GuildId { get; set; }
+
+    public virtual Guild Guild { get; set; } = null!;
 
     public virtual Monster Monster2 { get; set; } = null!;
 
@@ -21,5 +25,5 @@ public partial class Defense
 
     public virtual Monster MonsterLead { get; set; } = null!;
 
-    public virtual ICollection<PlayerDefense> PlayerDefenses { get; set; } = new List<PlayerDefense>();
+    public virtual ICollection<PlayerDefenseTower> PlayerDefenseTowers { get; set; } = new List<PlayerDefenseTower>();
 }

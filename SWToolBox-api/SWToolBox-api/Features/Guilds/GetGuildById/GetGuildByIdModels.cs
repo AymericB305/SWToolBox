@@ -3,17 +3,26 @@ using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OneOf.Types;
 using SWToolBox_api.Database.Entities;
-using SWToolBox_api.Features.Guilds.Defenses.CreateDefense;
 
 namespace SWToolBox_api.Features.Guilds.GetGuildById;
 
 public record GetGuildByIdQuery([FromRoute] Guid Id) : IRequest<OneOf<Guild, NotFound>>;
-public record GetGuildByIdResponse(Guid Id, string Name, IEnumerable<PlayerResponse> Players, IEnumerable<GuildDefenseResponse> Defenses);
-public record GuildDefenseResponse(DefenseResponse Defense, string Description);
-public record PlayerResponse(Guid Id, string Name, IEnumerable<PlayerDefenseResponse> Defenses);
-public record PlayerDefenseResponse(DefenseResponse Defense, short Wins, short? Losses);
-public record DefenseResponse(MonsterResponse MonsterLead, MonsterResponse Monster2, MonsterResponse Monster3);
+public record GetGuildByIdResponse(
+    Guid Id,
+    string Name,
+    IEnumerable<PlayerResponse> Players,
+    IEnumerable<DefenseResponse> Defenses);
+public record PlayerResponse(Guid Id, string Name);
+public record DefenseResponse(
+    Guid Id,
+    MonsterResponse MonsterLead,
+    MonsterResponse Monster2,
+    MonsterResponse Monster3,
+    string Description,
+    IEnumerable<Placement> Placements);
 public record MonsterResponse(long Id, string Name);
+public record Placement(Guid PlayerId, TowerResponse Tower);
+public record TowerResponse(long Id, string Name);
 
 public static class GetGuildByIdMapper
 {
@@ -23,7 +32,7 @@ public static class GetGuildByIdMapper
             guild.Id,
             guild.Name,
             guild.GuildPlayers.Select(gp => gp.Player.ToResponse()),
-            guild.GuildDefenses.Select(gd => gd.ToResponse())
+            guild.Defenses.Select(d => d.ToResponse())
         );
     }
 
@@ -31,36 +40,34 @@ public static class GetGuildByIdMapper
     {
         return new PlayerResponse(
             player.Id,
-            player.Name,
-            player.PlayerDefenses.Select(d => d.ToResponse())
+            player.Name
         );
-    }
-
-    private static PlayerDefenseResponse ToResponse(this PlayerDefense playerDefense)
-    {
-        return new PlayerDefenseResponse(
-            playerDefense.Defense.ToResponse(),
-            playerDefense.Wins,
-            playerDefense.Losses
-        );
-    }
-
-    private static GuildDefenseResponse ToResponse(this GuildDefense guildDefense)
-    {
-        return new GuildDefenseResponse(guildDefense.Defense.ToResponse(), guildDefense.Description);
     }
 
     private static DefenseResponse ToResponse(this Defense defense)
     {
         return new DefenseResponse(
+            defense.Id,
             defense.MonsterLead.ToResponse(),
             defense.Monster2.ToResponse(),
-            defense.Monster3.ToResponse()
+            defense.Monster3.ToResponse(),
+            defense.Description,
+            defense.PlayerDefenseTowers.Select(pdt => pdt.ToResponse())
         );
     }
 
     private static MonsterResponse ToResponse(this Monster monster)
     {
         return new MonsterResponse(monster.Id, monster.Name);
+    }
+
+    private static Placement ToResponse(this PlayerDefenseTower playerDefenseTower)
+    {
+        return new Placement(playerDefenseTower.PlayerId, playerDefenseTower.Tower.ToResponse());
+    }
+
+    private static TowerResponse ToResponse(this Tower tower)
+    {
+        return new TowerResponse(tower.Id, tower.Team.Code + tower.Number);
     }
 }

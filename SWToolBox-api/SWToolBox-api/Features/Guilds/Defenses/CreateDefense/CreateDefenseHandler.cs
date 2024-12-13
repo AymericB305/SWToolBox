@@ -18,36 +18,28 @@ internal sealed class CreateDefenseHandler(SwDbContext context) : IRequestHandle
         {
             return new NotFound();
         }
-
-        var defense = await context.Defenses
-            .FirstOrDefaultAsync(d => d.MonsterLeadId == request.MonsterLeadId
-                && d.Monster2Id == request.Monster2Id
-                && d.Monster3Id == request.Monster3Id, cancellationToken)
-        ?? new Defense
-        {
-            MonsterLeadId = request.MonsterLeadId,
-            Monster2Id = request.Monster2Id,
-            Monster3Id = request.Monster3Id,
-        };
         
-        var existingGuildDefense = await context.GuildDefenses
-            .FirstOrDefaultAsync(gd => gd.GuildId == request.GuildId
-                && gd.DefenseId == defense.Id, cancellationToken);
+        var existingDefense = await context.Defenses
+            .FirstOrDefaultAsync(d => d.GuildId == request.GuildId
+                && d.MonsterLeadId == request.MonsterLeadId
+                && d.Monster2Id == request.Monster2Id
+                && d.Monster3Id == request.Monster3Id, cancellationToken);
 
-        if (existingGuildDefense is not null)
+        if (existingDefense is not null)
         {
             return new Existing();
         }
 
-        var guildDefense = await context.GuildDefenses.AddAsync(new GuildDefense
+        var defense = await context.Defenses.AddAsync(new Defense
         {
-            GuildId = request.GuildId,
-            Defense = defense,
+            MonsterLeadId = request.MonsterLeadId,
+            Monster2Id = request.Monster2Id,
+            Monster3Id = request.Monster3Id,
             Description = request.Description,
         }, cancellationToken);
         
         await context.SaveChangesAsync(cancellationToken);
             
-        return guildDefense.Entity.Defense;
+        return defense.Entity;
     }
 }

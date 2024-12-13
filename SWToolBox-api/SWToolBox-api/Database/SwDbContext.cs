@@ -20,8 +20,6 @@ public partial class SwDbContext : DbContext
 
     public virtual DbSet<Guild> Guilds { get; set; }
 
-    public virtual DbSet<GuildDefense> GuildDefenses { get; set; }
-
     public virtual DbSet<GuildPlayer> GuildPlayers { get; set; }
 
     public virtual DbSet<LeaderSkill> LeaderSkills { get; set; }
@@ -32,7 +30,11 @@ public partial class SwDbContext : DbContext
 
     public virtual DbSet<Player> Players { get; set; }
 
-    public virtual DbSet<PlayerDefense> PlayerDefenses { get; set; }
+    public virtual DbSet<PlayerDefenseTower> PlayerDefenseTowers { get; set; }
+
+    public virtual DbSet<Team> Teams { get; set; }
+
+    public virtual DbSet<Tower> Towers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -75,9 +77,18 @@ public partial class SwDbContext : DbContext
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("gen_random_uuid()")
                 .HasColumnName("id");
+            entity.Property(e => e.Description)
+                .HasDefaultValueSql("''::text")
+                .HasColumnName("description");
+            entity.Property(e => e.GuildId).HasColumnName("guild_id");
             entity.Property(e => e.Monster2Id).HasColumnName("monster_2_id");
             entity.Property(e => e.Monster3Id).HasColumnName("monster_3_id");
             entity.Property(e => e.MonsterLeadId).HasColumnName("monster_lead_id");
+
+            entity.HasOne(d => d.Guild).WithMany(p => p.Defenses)
+                .HasForeignKey(d => d.GuildId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("defense_guild_id_fkey");
 
             entity.HasOne(d => d.Monster2).WithMany(p => p.DefenseMonster2s)
                 .HasForeignKey(d => d.Monster2Id)
@@ -119,27 +130,6 @@ public partial class SwDbContext : DbContext
                 .HasDefaultValueSql("gen_random_uuid()")
                 .HasColumnName("id");
             entity.Property(e => e.Name).HasColumnName("name");
-        });
-
-        modelBuilder.Entity<GuildDefense>(entity =>
-        {
-            entity.HasKey(e => new { e.GuildId, e.DefenseId }).HasName("guild_defense_pkey");
-
-            entity.ToTable("guild_defense");
-
-            entity.Property(e => e.GuildId).HasColumnName("guild_id");
-            entity.Property(e => e.DefenseId).HasColumnName("defense_id");
-            entity.Property(e => e.Description).HasColumnName("description");
-
-            entity.HasOne(d => d.Defense).WithMany(p => p.GuildDefenses)
-                .HasForeignKey(d => d.DefenseId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("guild_defense_defense_id_fkey");
-
-            entity.HasOne(d => d.Guild).WithMany(p => p.GuildDefenses)
-                .HasForeignKey(d => d.GuildId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("guild_defense_guild_id_fkey");
         });
 
         modelBuilder.Entity<GuildPlayer>(entity =>
@@ -246,37 +236,71 @@ public partial class SwDbContext : DbContext
             entity.Property(e => e.Name).HasColumnName("name");
         });
 
-        modelBuilder.Entity<PlayerDefense>(entity =>
+        modelBuilder.Entity<PlayerDefenseTower>(entity =>
         {
-            entity.HasKey(e => new { e.PlayerId, e.DefenseId, e.Name }).HasName("player_defense_pkey");
+            entity.HasKey(e => e.Id).HasName("player_defense_tower_pkey");
 
-            entity.ToTable("player_defense");
+            entity.ToTable("player_defense_tower");
 
-            entity.Property(e => e.PlayerId)
+            entity.Property(e => e.Id)
                 .HasDefaultValueSql("gen_random_uuid()")
-                .HasColumnName("player_id");
-            entity.Property(e => e.DefenseId)
-                .HasDefaultValueSql("gen_random_uuid()")
-                .HasColumnName("defense_id");
-            entity.Property(e => e.Name)
+                .HasColumnName("id");
+            entity.Property(e => e.Comment)
                 .HasDefaultValueSql("''::text")
-                .HasColumnName("name");
+                .HasColumnName("comment");
+            entity.Property(e => e.DefenseId).HasColumnName("defense_id");
             entity.Property(e => e.Losses)
                 .HasDefaultValueSql("'0'::smallint")
                 .HasColumnName("losses");
+            entity.Property(e => e.PlayerId).HasColumnName("player_id");
+            entity.Property(e => e.TowerId).HasColumnName("tower_id");
             entity.Property(e => e.Wins)
                 .HasDefaultValueSql("'0'::smallint")
                 .HasColumnName("wins");
 
-            entity.HasOne(d => d.Defense).WithMany(p => p.PlayerDefenses)
+            entity.HasOne(d => d.Defense).WithMany(p => p.PlayerDefenseTowers)
                 .HasForeignKey(d => d.DefenseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("player_defense_defense_id_fkey");
 
-            entity.HasOne(d => d.Player).WithMany(p => p.PlayerDefenses)
+            entity.HasOne(d => d.Player).WithMany(p => p.PlayerDefenseTowers)
                 .HasForeignKey(d => d.PlayerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("player_defense_player_id_fkey");
+
+            entity.HasOne(d => d.Tower).WithMany(p => p.PlayerDefenseTowers)
+                .HasForeignKey(d => d.TowerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("player_defense_guild_tower_tower_id_fkey");
+        });
+
+        modelBuilder.Entity<Team>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("team_pkey");
+
+            entity.ToTable("team");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Code)
+                .HasDefaultValueSql("''::text")
+                .HasColumnName("code");
+            entity.Property(e => e.Name).HasColumnName("name");
+        });
+
+        modelBuilder.Entity<Tower>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("tower_pkey");
+
+            entity.ToTable("tower");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Number).HasColumnName("number");
+            entity.Property(e => e.TeamId).HasColumnName("team_id");
+
+            entity.HasOne(d => d.Team).WithMany(p => p.Towers)
+                .HasForeignKey(d => d.TeamId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("tower_team_id_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);
