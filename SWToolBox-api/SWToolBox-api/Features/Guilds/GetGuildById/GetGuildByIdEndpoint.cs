@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace SWToolBox_api.Features.Guilds.GetGuildById;
 
-[HttpGet("${id:guid}")]
+[HttpGet("{id:guid}")]
 [Group<GuildsGroup>]
 public class GetGuildByIdEndpoint(ISender sender) : Endpoint<GetGuildByIdQuery, Results<Ok<GetGuildByIdResponse>, NotFound>>
 {

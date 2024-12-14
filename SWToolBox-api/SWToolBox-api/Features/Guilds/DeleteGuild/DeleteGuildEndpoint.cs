@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace SWToolBox_api.Features.Guilds.DeleteGuild;
 
-[HttpDelete("${id:guid}")]
+[HttpDelete("{id:guid}")]
 [Group<GuildsGroup>]
 public class DeleteGuildEndpoint(ISender sender) : Endpoint<DeleteGuildCommand, Results<Ok, NotFound>>
 {

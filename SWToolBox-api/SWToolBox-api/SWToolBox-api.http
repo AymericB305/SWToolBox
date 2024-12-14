@@ -17,6 +17,11 @@ Accept: application/json
 
 ###
 
+GET {{guilds}}/a0bfef78-2af1-4722-85d3-950c333c98d
+Accept: application/json
+
+###
+
 POST {{guilds}}/a0bfef78-2af1-4722-85d3-950c333c98de/players
 Accept: application/json
 Content-Type: application/json

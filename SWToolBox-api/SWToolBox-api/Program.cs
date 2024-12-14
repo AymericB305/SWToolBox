@@ -1,4 +1,5 @@
 using FastEndpoints;
+using FastEndpoints.Swagger;
 using Microsoft.EntityFrameworkCore;
 using SWToolBox_api.Database;
 
@@ -8,7 +9,18 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
 builder.Services.AddDbContextPool<SwDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("db")));
-builder.Services.AddFastEndpoints();
+builder.Services
+    .AddFastEndpoints()
+    .SwaggerDocument(o =>
+    {
+        o.MaxEndpointVersion = 1;
+        o.DocumentSettings = s =>
+        {
+            s.DocumentName = "Release 1";
+            s.Title = "My API";
+            s.Version = "v1";
+        };
+    });
 
 var app = builder.Build();
 
@@ -26,6 +38,6 @@ app.UseFastEndpoints(config =>
     config.Versioning.Prefix = "v";
     config.Versioning.DefaultVersion = 1;
     config.Versioning.PrependToRoute = true;
-});
+}).UseSwaggerGen();
 
 app.Run();
