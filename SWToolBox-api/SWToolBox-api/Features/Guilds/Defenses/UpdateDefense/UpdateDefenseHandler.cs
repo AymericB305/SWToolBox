@@ -1,33 +1,48 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OneOf;
 using OneOf.Types;
+using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database;
 using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.Defenses.UpdateDefense;
 
-public class UpdateDefenseHandler(SwDbContext context) : IRequestHandler<UpdateDefenseCommand, OneOf<Defense, NotFound>>
+public class UpdateDefenseHandler(SwDbContext context)
+    : IRequestHandler<UpdateDefenseCommand, OneOf<Defense, NotFound, Existing>>
 {
-    public async Task<OneOf<Defense, NotFound>> Handle(UpdateDefenseCommand request,
+    public async Task<OneOf<Defense, NotFound, Existing>> Handle(UpdateDefenseCommand request,
         CancellationToken cancellationToken)
     {
-        var existingGuildDefense = await context.Defenses
-            .FirstOrDefaultAsync(d => d.GuildId == request.GuildId && d.Id == request.Id, cancellationToken);
+        var defense = await context.Defenses
+            .FirstOrDefaultAsync(d => d.Id == request.Id, cancellationToken);
 
-        if (existingGuildDefense is null)
+        if (defense is null)
         {
             return new NotFound();
         }
-        
-        existingGuildDefense.MonsterLeadId = request.MonsterLeadId;
-        existingGuildDefense.Monster2Id = request.Monster2Id;
-        existingGuildDefense.Monster3Id = request.Monster3Id;
-        existingGuildDefense.Description = request.Description;
-        
+
+        var existingDefense = await context.Defenses
+            .FirstOrDefaultAsync(
+                d => d.Id != request.Id
+                     && d.GuildId == request.GuildId
+                     && d.MonsterLeadId == request.MonsterLeadId
+                     && d.Monster2Id == request.Monster2Id
+                     && d.Monster3Id == request.Monster3Id,
+                cancellationToken);
+
+        if (existingDefense is not null)
+        {
+            return new Existing();
+        }
+
+        defense.MonsterLeadId = request.MonsterLeadId;
+        defense.Monster2Id = request.Monster2Id;
+        defense.Monster3Id = request.Monster3Id;
+        defense.Description = request.Description;
+
         await context.SaveChangesAsync(cancellationToken);
 
-        return existingGuildDefense;
+        return defense;
     }
 }

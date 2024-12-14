@@ -1,3 +1,3 @@
 ﻿namespace SWToolBox_api.Common.Models;
 
-public struct Existing;
+public readonly struct Existing;
