@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SWToolBox_api.Database.Entities;
 
-public partial class PlayerDefenseTower
+public partial class Placement
 {
     public Guid PlayerId { get; set; }
 

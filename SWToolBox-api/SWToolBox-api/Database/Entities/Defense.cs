@@ -25,5 +25,5 @@ public partial class Defense
 
     public virtual Monster MonsterLead { get; set; } = null!;
 
-    public virtual ICollection<PlayerDefenseTower> PlayerDefenseTowers { get; set; } = new List<PlayerDefenseTower>();
+    public virtual ICollection<Placement> Placements { get; set; } = new List<Placement>();
 }

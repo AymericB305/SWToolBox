@@ -22,7 +22,7 @@ internal sealed class GetGuildByIdHandler(SwDbContext context) : IRequestHandler
             .Include(g => g.Defenses)
                 .ThenInclude(pd => pd.Monster3)
             .Include(g => g.Defenses)
-                .ThenInclude(d => d.PlayerDefenseTowers)
+                .ThenInclude(d => d.Placements)
                     .ThenInclude(pdt => pdt.Tower)
                         .ThenInclude(t => t.Team)
             .AsNoTracking()

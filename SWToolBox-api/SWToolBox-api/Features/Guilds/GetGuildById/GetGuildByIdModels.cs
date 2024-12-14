@@ -19,9 +19,9 @@ public record DefenseResponse(
     MonsterResponse Monster2,
     MonsterResponse Monster3,
     string Description,
-    IEnumerable<Placement> Placements);
+    IEnumerable<PlacementResponse> Placements);
 public record MonsterResponse(long Id, string Name);
-public record Placement(Guid PlayerId, TowerResponse Tower);
+public record PlacementResponse(Guid PlayerId, TowerResponse Tower);
 public record TowerResponse(long Id, string Name);
 
 public static class GetGuildByIdMapper
@@ -52,7 +52,7 @@ public static class GetGuildByIdMapper
             defense.Monster2.ToResponse(),
             defense.Monster3.ToResponse(),
             defense.Description,
-            defense.PlayerDefenseTowers.Select(pdt => pdt.ToResponse())
+            defense.Placements.Select(pdt => pdt.ToResponse())
         );
     }
 
@@ -61,9 +61,9 @@ public static class GetGuildByIdMapper
         return new MonsterResponse(monster.Id, monster.Name);
     }
 
-    private static Placement ToResponse(this PlayerDefenseTower playerDefenseTower)
+    private static PlacementResponse ToResponse(this Placement placement)
     {
-        return new Placement(playerDefenseTower.PlayerId, playerDefenseTower.Tower.ToResponse());
+        return new PlacementResponse(placement.PlayerId, placement.Tower.ToResponse());
     }
 
     private static TowerResponse ToResponse(this Tower tower)

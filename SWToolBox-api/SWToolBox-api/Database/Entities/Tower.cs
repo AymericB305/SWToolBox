@@ -11,7 +11,7 @@ public partial class Tower
 
     public long TeamId { get; set; }
 
-    public virtual ICollection<PlayerDefenseTower> PlayerDefenseTowers { get; set; } = new List<PlayerDefenseTower>();
+    public virtual ICollection<Placement> Placements { get; set; } = new List<Placement>();
 
     public virtual Team Team { get; set; } = null!;
 }

@@ -11,5 +11,5 @@ public partial class Player
 
     public virtual ICollection<GuildPlayer> GuildPlayers { get; set; } = new List<GuildPlayer>();
 
-    public virtual ICollection<PlayerDefenseTower> PlayerDefenseTowers { get; set; } = new List<PlayerDefenseTower>();
+    public virtual ICollection<Placement> Placements { get; set; } = new List<Placement>();
 }
