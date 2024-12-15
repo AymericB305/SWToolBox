@@ -14,7 +14,7 @@ internal sealed class CreatePlacementHandler(SwDbContext context) : IRequestHand
     {
         var guild = await context.Guilds
             .AsNoTracking()
-            .FirstOrDefaultAsync(g => g.Id == request.GuildId, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(g => g.Id == request.GuildId, cancellationToken);
         if (guild is null)
         {
             return new NotFound();
@@ -22,7 +22,7 @@ internal sealed class CreatePlacementHandler(SwDbContext context) : IRequestHand
         
         var player = await context.Players
             .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Id == request.PlayerId, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(p => p.Id == request.PlayerId, cancellationToken);
         if (player is null)
         {
             return new Failure("Player not found");
@@ -31,7 +31,7 @@ internal sealed class CreatePlacementHandler(SwDbContext context) : IRequestHand
         var tower = await context.Towers
             .Include(t => t.Placements)
             .AsNoTracking()
-            .FirstOrDefaultAsync(t => t.Id == request.TowerId, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(t => t.Id == request.TowerId, cancellationToken);
         if (tower is null)
         {
             return new Failure("Tower not found");
@@ -42,7 +42,7 @@ internal sealed class CreatePlacementHandler(SwDbContext context) : IRequestHand
             return new Failure("This tower already contains too many defenses");
         }
         
-        var defense = await context.Defenses.FirstOrDefaultAsync(d => d.Id == request.DefenseId, cancellationToken: cancellationToken);
+        var defense = await context.Defenses.FirstOrDefaultAsync(d => d.Id == request.DefenseId, cancellationToken);
         if (defense is null)
         {
             return new Failure("Defense not found");
@@ -59,6 +59,8 @@ internal sealed class CreatePlacementHandler(SwDbContext context) : IRequestHand
             TowerId = request.TowerId,
             PlayerId = request.PlayerId,
         }, cancellationToken);
+        
+        await context.SaveChangesAsync(cancellationToken);
         
         return placement.Entity;
     }
