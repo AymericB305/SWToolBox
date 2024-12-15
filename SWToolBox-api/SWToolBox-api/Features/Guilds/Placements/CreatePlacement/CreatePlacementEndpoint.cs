@@ -6,9 +6,9 @@ namespace SWToolBox_api.Features.Guilds.Placements.CreatePlacement;
 
 [HttpPost("")]
 [Group<PlacementGroup>]
-public class CreatePlacementEndpoint(ISender sender) : Endpoint<CreatePlacementRequest, Results<Ok<CreatePlacementResponse>, NotFound, ProblemDetails>>
+public class CreatePlacementEndpoint(ISender sender) : Endpoint<CreatePlacementCommand, Results<Ok<CreatePlacementResponse>, NotFound, ProblemDetails>>
 {
-    public override async Task<Results<Ok<CreatePlacementResponse>, NotFound, ProblemDetails>> ExecuteAsync(CreatePlacementRequest req, CancellationToken ct)
+    public override async Task<Results<Ok<CreatePlacementResponse>, NotFound, ProblemDetails>> ExecuteAsync(CreatePlacementCommand req, CancellationToken ct)
     {
         var placementOrFailureOrNotFound = await sender.Send(req, ct);
         

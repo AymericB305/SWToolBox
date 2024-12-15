@@ -7,7 +7,7 @@ using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.Placements.UpdatePlacement;
 
-public record UpdatePlacementRequest(
+public record UpdatePlacementCommand(
     [FromRoute] Guid GuildId,
     [FromRoute] Guid Id,
     long TowerId,

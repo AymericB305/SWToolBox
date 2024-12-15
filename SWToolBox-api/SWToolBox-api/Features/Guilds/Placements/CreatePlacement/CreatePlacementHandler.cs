@@ -8,9 +8,9 @@ using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.Placements.CreatePlacement;
 
-internal sealed class CreatePlacementHandler(SwDbContext context) : IRequestHandler<CreatePlacementRequest, OneOf<Placement, Failure, NotFound>>
+internal sealed class CreatePlacementHandler(SwDbContext context) : IRequestHandler<CreatePlacementCommand, OneOf<Placement, Failure, NotFound>>
 {
-    public async Task<OneOf<Placement, Failure, NotFound>> Handle(CreatePlacementRequest request, CancellationToken cancellationToken)
+    public async Task<OneOf<Placement, Failure, NotFound>> Handle(CreatePlacementCommand request, CancellationToken cancellationToken)
     {
         var guild = await context.Guilds
             .AsNoTracking()

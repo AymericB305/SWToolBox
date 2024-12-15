@@ -7,7 +7,7 @@ using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.Placements.CreatePlacement;
 
-public record CreatePlacementRequest([FromRoute] Guid GuildId, long TowerId, Guid PlayerId, Guid DefenseId)
+public record CreatePlacementCommand([FromRoute] Guid GuildId, long TowerId, Guid PlayerId, Guid DefenseId)
     : IRequest<OneOf<Placement, Failure, NotFound>>;
 public record CreatePlacementResponse(PlayerResponse Player, DefenseResponse Defense, TowerResponse Tower);
 public record PlayerResponse(Guid Id, string Name);

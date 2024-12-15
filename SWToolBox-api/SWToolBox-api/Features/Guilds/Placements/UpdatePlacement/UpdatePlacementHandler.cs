@@ -8,9 +8,9 @@ using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.Placements.UpdatePlacement;
 
-public class UpdatePlacementHandler(SwDbContext context) : IRequestHandler<UpdatePlacementRequest, OneOf<Placement, Failure, NotFound>>
+public class UpdatePlacementHandler(SwDbContext context) : IRequestHandler<UpdatePlacementCommand, OneOf<Placement, Failure, NotFound>>
 {
-    public async Task<OneOf<Placement, Failure, NotFound>> Handle(UpdatePlacementRequest request, CancellationToken cancellationToken)
+    public async Task<OneOf<Placement, Failure, NotFound>> Handle(UpdatePlacementCommand request, CancellationToken cancellationToken)
     {
         var guild = await context.Guilds
             .AsNoTracking()
