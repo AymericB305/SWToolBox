@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace SWToolBox_api.Features.Guilds.GetGuildById;
 
-[HttpGet("{id:guid}")]
+[HttpGet("{guildId:guid}")]
 [Group<GuildsGroup>]
+[Authorize(Policy = "ReadGuildData")]
 public class GetGuildByIdEndpoint(ISender sender) : Endpoint<GetGuildByIdQuery, Results<Ok<GetGuildByIdResponse>, NotFound>>
 {
     public override async Task<Results<Ok<GetGuildByIdResponse>, NotFound>> ExecuteAsync(GetGuildByIdQuery req, CancellationToken ct)

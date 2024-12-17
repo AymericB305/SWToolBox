@@ -9,6 +9,8 @@ public partial class Player
 
     public string Name { get; set; } = null!;
 
+    public Guid? UserId { get; set; }
+
     public virtual ICollection<GuildPlayer> GuildPlayers { get; set; } = new List<GuildPlayer>();
 
     public virtual ICollection<Placement> Placements { get; set; } = new List<Placement>();

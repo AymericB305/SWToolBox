@@ -6,7 +6,7 @@ using NotFound = OneOf.Types.NotFound;
 
 namespace SWToolBox_api.Features.Guilds.UpdateGuild;
 
-public record UpdateGuildCommand(Guid Id, string Name) : IRequest<OneOf<Guild, NotFound, Existing>>;
+public record UpdateGuildCommand(Guid GuildId, string Name) : IRequest<OneOf<Guild, NotFound, Existing>>;
 public record UpdateGuildResponse(Guid Id, string Name);
 
 public static class UpdateGuildMapper

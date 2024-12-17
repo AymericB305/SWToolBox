@@ -8,7 +8,7 @@ public sealed class GuildPlayersGroup : SubGroup<GuildsGroup>
     {
         Configure("{guildId:guid}/players", ep =>
         {
-            ep.AllowAnonymous();
+            
         });
     }
 }

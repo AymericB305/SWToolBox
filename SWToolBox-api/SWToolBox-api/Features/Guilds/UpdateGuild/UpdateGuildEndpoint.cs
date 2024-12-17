@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace SWToolBox_api.Features.Guilds.UpdateGuild;
 
-[HttpPut("{id:guid}")]
+[HttpPut("{guildId:guid}")]
 [Group<GuildsGroup>]
 public class UpdateGuildEndpoint(ISender sender) : Endpoint<UpdateGuildCommand, Results<Ok<UpdateGuildResponse>, NotFound, Conflict<string>>>
 {

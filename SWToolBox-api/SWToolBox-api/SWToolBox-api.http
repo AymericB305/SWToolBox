@@ -1,6 +1,8 @@
 @SWToolBox_api_HostAddress = http://localhost:5178
 
 @guilds = {{SWToolBox_api_HostAddress}}/api/v1/guilds
+@players = {{SWToolBox_api_HostAddress}}/api/v1/players
+@jwt = eyJhbGciOiJIUzI1NiIsImtpZCI6IlVXUXNEeENkWE9FSWkvRGciLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3dwcHV1aXZzZ3p2enNmcHZycnh1LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJlMzZlN2Y4ZC02YzA2LTQ3MDMtYjQ5YS04NDkwNWM2NDU5ZWUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzM0NDYyNzQzLCJpYXQiOjE3MzQ0NTkxNDMsImVtYWlsIjoiYXltZXJpY2JyZXRvbjg1MzVAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6e30sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3MzQ0NTkxNDN9XSwic2Vzc2lvbl9pZCI6ImVmZWQ2ZjE2LTYyOWUtNDg5OC05NmYyLWNmN2RlN2RjZDM5ZCIsImlzX2Fub255bW91cyI6ZmFsc2V9.9gz_kUbLRp0CtQ745gJuqGOyo1LTBeva9AJByD1RCs4
 
 POST {{guilds}}
 Accept: application/json
@@ -17,8 +19,9 @@ Accept: application/json
 
 ###
 
-GET {{guilds}}/a0bfef78-2af1-4722-85d3-950c333c98d
+GET {{guilds}}/a0bfef78-2af1-4722-85d3-950c333c98de
 Accept: application/json
+Authorization: Bearer {{jwt}}
 
 ###
 
@@ -31,3 +34,14 @@ Content-Type: application/json
 }
 
 ###
+
+PUT {{players}}/4c7cf6a2-0b1d-4f54-a61d-fc72ddd5eefb
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+{
+  "name": "Bric305"
+}
+
+### 

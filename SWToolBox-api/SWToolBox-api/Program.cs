@@ -1,14 +1,67 @@
+using System.Text;
 using FastEndpoints;
 using FastEndpoints.Swagger;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SWToolBox_api.Database;
+using SWToolBox_api.Features.Guilds.Authorization;
+using SWToolBox_api.Features.Players.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.AddConsole();
+    loggingBuilder.AddDebug();
+});
 
 builder.Services.AddOpenApi();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
 builder.Services.AddDbContextPool<SwDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("db")));
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("WritePlayerData", policy =>
+    {
+        policy.Requirements.Add(new WritePlayerDataRequirement());
+    })
+    .AddPolicy("ReadGuildData", policy =>
+    {
+        policy.Requirements.Add(new ReadGuildDataRequirement());
+    });
+
+var key = Encoding.UTF8.GetBytes(builder.Configuration["Authentication:JwtSecret"]!);
+builder.Services.AddAuthentication().AddJwtBearer(o =>
+{
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidAudience = builder.Configuration["Authentication:ValidAudience"],
+        ValidIssuer = builder.Configuration["Authentication:ValidIssuer"]
+    };
+    
+    o.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+            return Task.CompletedTask;
+        },
+        OnChallenge = context =>
+        {
+            Console.WriteLine($"Challenge issued: {context.Error}, {context.ErrorDescription}");
+            return Task.CompletedTask;
+        }
+    };
+});
+
+builder.Services.AddTransient<IAuthorizationHandler, WritePlayerAuthorizationHandler>();
+builder.Services.AddTransient<IAuthorizationHandler, ReadGuildAuthorizationHandler>();
+builder.Services.AddHttpContextAccessor();
+
 builder.Services
     .AddFastEndpoints()
     .SwaggerDocument(o =>
@@ -31,6 +84,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseFastEndpoints(config =>
 {

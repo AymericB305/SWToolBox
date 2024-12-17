@@ -6,7 +6,7 @@ using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.GetGuildById;
 
-public record GetGuildByIdQuery([FromRoute] Guid Id) : IRequest<OneOf<Guild, NotFound>>;
+public record GetGuildByIdQuery([FromRoute] Guid GuildId) : IRequest<OneOf<Guild, NotFound>>;
 public record GetGuildByIdResponse(
     Guid Id,
     string Name,

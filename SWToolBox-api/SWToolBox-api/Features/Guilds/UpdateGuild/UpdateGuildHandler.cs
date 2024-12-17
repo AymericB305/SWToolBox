@@ -12,7 +12,7 @@ internal sealed class UpdateGuildHandler(SwDbContext context) : IRequestHandler<
 {
     public async Task<OneOf<Guild, NotFound, Existing>> Handle(UpdateGuildCommand request, CancellationToken cancellationToken)
     {
-        var existingGuild = await context.Guilds.FirstOrDefaultAsync(g => g.Id == request.Id, cancellationToken);
+        var existingGuild = await context.Guilds.FirstOrDefaultAsync(g => g.Id == request.GuildId, cancellationToken);
 
         if (existingGuild is null)
         {

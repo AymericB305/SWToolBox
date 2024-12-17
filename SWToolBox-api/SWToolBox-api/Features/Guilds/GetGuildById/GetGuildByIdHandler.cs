@@ -26,7 +26,7 @@ internal sealed class GetGuildByIdHandler(SwDbContext context) : IRequestHandler
                     .ThenInclude(pdt => pdt.Tower)
                         .ThenInclude(t => t.Team)
             .AsNoTracking()
-            .FirstOrDefaultAsync(g => g.Id == request.Id, cancellationToken);
+            .FirstOrDefaultAsync(g => g.Id == request.GuildId, cancellationToken);
 
         if (guild is null)
         {

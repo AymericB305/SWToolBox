@@ -268,10 +268,13 @@ public partial class SwDbContext : DbContext
 
             entity.ToTable("player");
 
+            entity.HasIndex(e => e.UserId, "player_user_id_key").IsUnique();
+
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("gen_random_uuid()")
                 .HasColumnName("id");
             entity.Property(e => e.Name).HasColumnName("name");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
         });
 
         modelBuilder.Entity<Team>(entity =>

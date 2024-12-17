@@ -6,9 +6,6 @@ public sealed class PlayersGroup : Group
 {
     public PlayersGroup()
     {
-        Configure("players", ep =>
-        {
-            ep.AllowAnonymous();
-        });
+        Configure("players", ep => { });
     }
 }

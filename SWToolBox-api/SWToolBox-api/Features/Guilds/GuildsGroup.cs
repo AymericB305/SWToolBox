@@ -8,7 +8,7 @@ public sealed class GuildsGroup : Group
     {
         Configure("guilds", ep =>
         {
-            ep.AllowAnonymous();
+            
         });
     }
 }
