@@ -32,6 +32,8 @@ public partial class SwDbContext : DbContext
 
     public virtual DbSet<Player> Players { get; set; }
 
+    public virtual DbSet<Rank> Ranks { get; set; }
+
     public virtual DbSet<Team> Teams { get; set; }
 
     public virtual DbSet<Tower> Towers { get; set; }
@@ -140,6 +142,8 @@ public partial class SwDbContext : DbContext
 
             entity.Property(e => e.GuildId).HasColumnName("guild_id");
             entity.Property(e => e.PlayerId).HasColumnName("player_id");
+            entity.Property(e => e.IsArchivedByPlayer).HasColumnName("isArchivedByPlayer");
+            entity.Property(e => e.IsHiddenByGuild).HasColumnName("isHiddenByGuild");
             entity.Property(e => e.JoinedAt)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
@@ -147,6 +151,7 @@ public partial class SwDbContext : DbContext
             entity.Property(e => e.LeftAt)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("left_at");
+            entity.Property(e => e.RankId).HasColumnName("rank_id");
 
             entity.HasOne(d => d.Guild).WithMany(p => p.GuildPlayers)
                 .HasForeignKey(d => d.GuildId)
@@ -157,6 +162,11 @@ public partial class SwDbContext : DbContext
                 .HasForeignKey(d => d.PlayerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("guild_player_player_id_fkey");
+
+            entity.HasOne(d => d.Rank).WithMany(p => p.GuildPlayers)
+                .HasForeignKey(d => d.RankId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("guild_player_rank_id_fkey");
         });
 
         modelBuilder.Entity<LeaderSkill>(entity =>
@@ -275,6 +285,18 @@ public partial class SwDbContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.Name).HasColumnName("name");
             entity.Property(e => e.UserId).HasColumnName("user_id");
+        });
+
+        modelBuilder.Entity<Rank>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("rank_pkey");
+
+            entity.ToTable("rank");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Name)
+                .HasDefaultValueSql("''::text")
+                .HasColumnName("name");
         });
 
         modelBuilder.Entity<Team>(entity =>

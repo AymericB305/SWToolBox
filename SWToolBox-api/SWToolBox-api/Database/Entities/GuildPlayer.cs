@@ -13,7 +13,15 @@ public partial class GuildPlayer
 
     public DateTime? LeftAt { get; set; }
 
+    public long RankId { get; set; }
+
+    public bool IsArchivedByPlayer { get; set; }
+
+    public bool IsHiddenByGuild { get; set; }
+
     public virtual Guild Guild { get; set; } = null!;
 
     public virtual Player Player { get; set; } = null!;
+
+    public virtual Rank Rank { get; set; } = null!;
 }

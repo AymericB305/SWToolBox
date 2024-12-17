@@ -1,18 +1,16 @@
-﻿using MediatR;
+﻿using System.Collections;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OneOf.Types;
 using SWToolBox_api.Database.Entities;
 
-namespace SWToolBox_api.Features.Guilds.GetGuildById;
+namespace SWToolBox_api.Features.Players.GetPlayerById;
 
-public record GetGuildByIdQuery([FromRoute] Guid GuildId) : IRequest<OneOf<Guild, NotFound>>;
-public record GetGuildByIdResponse(
-    Guid Id,
-    string Name,
-    IEnumerable<PlayerResponse> Players,
-    IEnumerable<DefenseResponse> Defenses);
-public record PlayerResponse(Guid Id, string Name, DateTime JoinedAt, DateTime? LeftAt, RankResponse Rank);
+public record GetPlayerByIdQuery([FromRoute] Guid Id) : IRequest<OneOf<Player, NotFound>>;
+
+public record GetPlayerByIdResponse(Guid Id, string Name, IEnumerable<GuildResponse> Guilds);
+public record GuildResponse(Guid Id, string Name, IEnumerable<DefenseResponse> Defenses, DateTime JoinedAt, DateTime? LeftAt, RankResponse Rank);
 public record DefenseResponse(
     Guid Id,
     MonsterResponse MonsterLead,
@@ -27,21 +25,21 @@ public record RankResponse(long Id, string Name);
 
 public static class GetGuildByIdMapper
 {
-    public static GetGuildByIdResponse ToResponse(this Guild guild)
+    public static GetPlayerByIdResponse ToResponse(this Player player)
     {
-        return new GetGuildByIdResponse(
-            guild.Id,
-            guild.Name,
-            guild.GuildPlayers.Select(gp => gp.Player.ToResponse(gp.JoinedAt, gp.LeftAt, gp.Rank)),
-            guild.Defenses.Select(d => d.ToResponse())
+        return new GetPlayerByIdResponse(
+            player.Id,
+            player.Name,
+            player.GuildPlayers.Select(gp => gp.Guild.ToResponse(gp.JoinedAt, gp.LeftAt, gp.Rank))
         );
     }
 
-    private static PlayerResponse ToResponse(this Player player, DateTime joinedAt, DateTime? leftAt, Rank rank)
+    private static GuildResponse ToResponse(this Guild guild, DateTime joinedAt, DateTime? leftAt, Rank rank)
     {
-        return new PlayerResponse(
-            player.Id,
-            player.Name,
+        return new GuildResponse(
+            guild.Id,
+            guild.Name,
+            guild.Defenses.Select(d => d.ToResponse()),
             joinedAt,
             leftAt,
             rank.ToResponse()
