@@ -34,6 +34,9 @@ internal sealed class GetPlayerByIdHandler(SwDbContext context)
             Name = p.Name,
             GuildPlayers = p.GuildPlayers
                 .Where(gp => !gp.IsHiddenByGuild && !gp.IsArchivedByPlayer)
+                .OrderBy(gp => gp.LeftAt is null)
+                    .ThenByDescending(gp => gp.JoinedAt)
+                    .ThenByDescending(gp => gp.LeftAt)
                 .Select(gp => SelectGuildPlayer(gp, requestId)).ToList()
         };
     }
