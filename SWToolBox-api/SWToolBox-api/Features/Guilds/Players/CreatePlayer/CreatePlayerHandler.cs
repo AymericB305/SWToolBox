@@ -40,6 +40,7 @@ internal sealed class CreatePlayerHandler(SwDbContext context) : IRequestHandler
         {
             GuildId = request.GuildId,
             Player = existingPlayer,
+            RankId = 1L, // member
         };
         
         await context.GuildPlayers.AddAsync(guildPlayer, cancellationToken);
