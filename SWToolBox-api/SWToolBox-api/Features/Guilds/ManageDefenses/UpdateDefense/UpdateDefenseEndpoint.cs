@@ -1,6 +1,7 @@
 ﻿using FastEndpoints;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
+using SWToolBox_api.Features.Guilds.ManageDefenses;
 
 namespace SWToolBox_api.Features.Guilds.Defenses.UpdateDefense;
 

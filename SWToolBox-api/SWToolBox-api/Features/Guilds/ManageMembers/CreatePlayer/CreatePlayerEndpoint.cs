@@ -2,10 +2,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace SWToolBox_api.Features.Guilds.Players.CreatePlayer;
+namespace SWToolBox_api.Features.Guilds.ManageMembers.CreatePlayer;
 
 [HttpPost("")]
-[Group<GuildPlayersGroup>]
+[Group<MembersGroup>]
 public class CreatePlayerEndpoint(ISender sender) : Endpoint<CreatePlayerCommand, Results<Ok<CreatePlayerResponse>, Conflict<string>>>
 {
     public override async Task<Results<Ok<CreatePlayerResponse>, Conflict<string>>> ExecuteAsync(CreatePlayerCommand req, CancellationToken ct)

@@ -6,6 +6,9 @@ public sealed class PlayersGroup : Group
 {
     public PlayersGroup()
     {
-        Configure("players", ep => { });
+        Configure("players", ep =>
+        {
+            ep.Policies("ManagePlayerData");
+        });
     }
 }

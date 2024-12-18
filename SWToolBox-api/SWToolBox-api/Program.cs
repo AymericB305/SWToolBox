@@ -2,11 +2,11 @@ using System.Text;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SWToolBox_api.Database;
 using SWToolBox_api.Features.Guilds.Authorization;
+using SWToolBox_api.Features.Guilds.ManageMembers.Authorization;
 using SWToolBox_api.Features.Players.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,18 +19,15 @@ builder.Services.AddLogging(loggingBuilder =>
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
 builder.Services.AddDbContextPool<SwDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("db")));
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("ManagePlayerData", policy =>
-    {
-        policy.Requirements.Add(new ManagePlayerDataRequirement());
-    })
-    .AddPolicy("ReadGuildData", policy =>
-    {
-        policy.Requirements.Add(new ReadGuildDataRequirement());
-    });
+    .AddManagePlayerDataPolicy()
+    .AddReadGuildDataPolicy()
+    .AddManageMembersPolicy()
+    .AddChangeRankPolicy();
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Authentication:JwtSecret"]!);
 builder.Services.AddAuthentication().AddJwtBearer(o =>
@@ -57,10 +54,6 @@ builder.Services.AddAuthentication().AddJwtBearer(o =>
         }
     };
 });
-
-builder.Services.AddTransient<IAuthorizationHandler, ManagePlayerAuthorizationHandler>();
-builder.Services.AddTransient<IAuthorizationHandler, ReadGuildAuthorizationHandler>();
-builder.Services.AddHttpContextAccessor();
 
 builder.Services
     .AddFastEndpoints()

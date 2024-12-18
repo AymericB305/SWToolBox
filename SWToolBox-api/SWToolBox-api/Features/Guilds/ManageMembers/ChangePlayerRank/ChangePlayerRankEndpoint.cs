@@ -1,11 +1,13 @@
 ﻿using FastEndpoints;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace SWToolBox_api.Features.Guilds.Players.ChangePlayerRank;
+namespace SWToolBox_api.Features.Guilds.ManageMembers.ChangePlayerRank;
 
-[HttpPatch("{playerId:guid}/rank")]
-[Group<GuildPlayersGroup>]
+[HttpPatch("{playerId:guid}/rank/{rankId:long}")]
+[Group<MembersGroup>]
+[Authorize(Policy = "ChangeRank")]
 public class ChangePlayerRankEndpoint(ISender sender) : Endpoint<ChangePlayerRankCommand, Results<Ok<ChangePlayerRankResponse>, NotFound>>
 {
     public override async Task<Results<Ok<ChangePlayerRankResponse>, NotFound>> ExecuteAsync(ChangePlayerRankCommand req, CancellationToken ct)

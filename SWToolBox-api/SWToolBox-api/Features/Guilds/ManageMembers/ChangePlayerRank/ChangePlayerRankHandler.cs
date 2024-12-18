@@ -5,7 +5,7 @@ using OneOf.Types;
 using SWToolBox_api.Database;
 using SWToolBox_api.Database.Entities;
 
-namespace SWToolBox_api.Features.Guilds.Players.ChangePlayerRank;
+namespace SWToolBox_api.Features.Guilds.ManageMembers.ChangePlayerRank;
 
 public class ChangePlayerRankHandler(SwDbContext context) : IRequestHandler<ChangePlayerRankCommand, OneOf<GuildPlayer, NotFound>>
 {

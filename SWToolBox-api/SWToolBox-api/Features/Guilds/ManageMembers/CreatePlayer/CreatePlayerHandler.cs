@@ -5,7 +5,7 @@ using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database;
 using SWToolBox_api.Database.Entities;
 
-namespace SWToolBox_api.Features.Guilds.Players.CreatePlayer;
+namespace SWToolBox_api.Features.Guilds.ManageMembers.CreatePlayer;
 
 internal sealed class CreatePlayerHandler(SwDbContext context) : IRequestHandler<CreatePlayerCommand, OneOf<Player, Existing>>
 {

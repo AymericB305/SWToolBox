@@ -2,10 +2,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace SWToolBox_api.Features.Guilds.Players.RemovePlayerFromGuild;
+namespace SWToolBox_api.Features.Guilds.ManageMembers.RemovePlayerFromGuild;
 
 [HttpDelete("{id:guid}")]
-[Group<GuildPlayersGroup>]
+[Group<MembersGroup>]
 public class RemovePlayerFromGuildEndpoint(ISender sender) : Endpoint<RemovePlayerFromGuildCommand, Results<Ok, ProblemDetails>>
 {
     public override async Task<Results<Ok, ProblemDetails>> ExecuteAsync(RemovePlayerFromGuildCommand req, CancellationToken ct)

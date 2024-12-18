@@ -6,7 +6,7 @@ using OneOf;
 using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database.Entities;
 
-namespace SWToolBox_api.Features.Guilds.Players.CreatePlayer;
+namespace SWToolBox_api.Features.Guilds.ManageMembers.CreatePlayer;
 
 public record CreatePlayerCommand([FromRoute] Guid GuildId, string Name) : IRequest<OneOf<Player, Existing>>;
 public record CreatePlayerResponse(Guid Id, string Name);

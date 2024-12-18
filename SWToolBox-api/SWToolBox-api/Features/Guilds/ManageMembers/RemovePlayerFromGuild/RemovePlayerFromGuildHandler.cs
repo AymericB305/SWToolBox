@@ -6,7 +6,7 @@ using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database;
 using NotFound = OneOf.Types.NotFound;
 
-namespace SWToolBox_api.Features.Guilds.Players.RemovePlayerFromGuild;
+namespace SWToolBox_api.Features.Guilds.ManageMembers.RemovePlayerFromGuild;
 
 internal sealed class RemovePlayerFromGuildHandler(SwDbContext context) : IRequestHandler<RemovePlayerFromGuildCommand, OneOf<Success, Failure, NotFound>>
 {

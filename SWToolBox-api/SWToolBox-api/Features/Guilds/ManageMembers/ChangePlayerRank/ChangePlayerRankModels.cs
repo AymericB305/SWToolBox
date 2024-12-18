@@ -4,11 +4,15 @@ using OneOf;
 using OneOf.Types;
 using SWToolBox_api.Database.Entities;
 
-namespace SWToolBox_api.Features.Guilds.Players.ChangePlayerRank;
+namespace SWToolBox_api.Features.Guilds.ManageMembers.ChangePlayerRank;
 
-public record ChangePlayerRankCommand([FromRoute] Guid GuildId, [FromRoute] Guid PlayerId, long RankId, Guid RequesterId) : IRequest<OneOf<GuildPlayer, NotFound>>;
+public record ChangePlayerRankCommand(
+    [FromRoute] Guid GuildId,
+    [FromRoute] Guid PlayerId,
+    [FromRoute] long RankId) : IRequest<OneOf<GuildPlayer, NotFound>>;
 
 public record ChangePlayerRankResponse(Guid PlayerId, RankResponse Rank);
+
 public record RankResponse(long Id, string Name);
 
 public static class ChangePlayerRankMapper
