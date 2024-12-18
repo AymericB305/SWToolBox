@@ -2,7 +2,7 @@
 
 namespace SWToolBox_api.Features.Players.Authorization;
 
-public class WritePlayerDataRequirement : IAuthorizationRequirement
+public class ManagePlayerDataRequirement : IAuthorizationRequirement
 {
     
 }

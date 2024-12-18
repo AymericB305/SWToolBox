@@ -23,9 +23,9 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Pro
 builder.Services.AddDbContextPool<SwDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("db")));
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("WritePlayerData", policy =>
+    .AddPolicy("ManagePlayerData", policy =>
     {
-        policy.Requirements.Add(new WritePlayerDataRequirement());
+        policy.Requirements.Add(new ManagePlayerDataRequirement());
     })
     .AddPolicy("ReadGuildData", policy =>
     {
@@ -58,7 +58,7 @@ builder.Services.AddAuthentication().AddJwtBearer(o =>
     };
 });
 
-builder.Services.AddTransient<IAuthorizationHandler, WritePlayerAuthorizationHandler>();
+builder.Services.AddTransient<IAuthorizationHandler, ManagePlayerAuthorizationHandler>();
 builder.Services.AddTransient<IAuthorizationHandler, ReadGuildAuthorizationHandler>();
 builder.Services.AddHttpContextAccessor();
 

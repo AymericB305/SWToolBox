@@ -4,11 +4,11 @@ using SWToolBox_api.Database;
 
 namespace SWToolBox_api.Features.Players.Authorization;
 
-public class WritePlayerAuthorizationHandler(IHttpContextAccessor httpContextAccessor, SwDbContext dbContext)
-    : AuthorizationHandler<WritePlayerDataRequirement>
+public class ManagePlayerAuthorizationHandler(IHttpContextAccessor httpContextAccessor, SwDbContext dbContext)
+    : AuthorizationHandler<ManagePlayerDataRequirement>
 {
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context,
-        WritePlayerDataRequirement requirement)
+        ManagePlayerDataRequirement requirement)
     {
         var userId = context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId is null)
