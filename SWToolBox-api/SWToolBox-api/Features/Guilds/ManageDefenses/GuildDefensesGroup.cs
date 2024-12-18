@@ -8,7 +8,7 @@ public sealed class GuildDefensesGroup : SubGroup<GuildsGroup>
     {
         Configure("{guildId:guid}/defenses", ep =>
         {
-            
+            ep.Policies("ManageDefenses");
         });
     }
 }
