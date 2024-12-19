@@ -4,7 +4,7 @@ using OneOf;
 using OneOf.Types;
 using SWToolBox_api.Database;
 
-namespace SWToolBox_api.Features.Guilds.Defenses.DeleteDefense;
+namespace SWToolBox_api.Features.Guilds.ManageDefenses.DeleteDefense;
 
 internal sealed class DeleteDefenseHandler(SwDbContext context) : IRequestHandler<DeleteDefenseCommand, OneOf<Success, NotFound>>
 {

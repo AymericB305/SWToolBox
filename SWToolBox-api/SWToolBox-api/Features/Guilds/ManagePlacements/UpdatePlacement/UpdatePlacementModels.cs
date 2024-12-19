@@ -5,11 +5,15 @@ using OneOf.Types;
 using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database.Entities;
 
-namespace SWToolBox_api.Features.Guilds.Placements.CreatePlacement;
+namespace SWToolBox_api.Features.Guilds.ManagePlacements.UpdatePlacement;
 
-public record CreatePlacementCommand([FromRoute] Guid GuildId, long TowerId, Guid PlayerId, Guid DefenseId)
-    : IRequest<OneOf<Placement, Failure, NotFound>>;
-public record CreatePlacementResponse(PlayerResponse Player, DefenseResponse Defense, TowerResponse Tower);
+public record UpdatePlacementCommand(
+    [FromRoute] Guid GuildId,
+    [FromRoute] Guid Id,
+    long TowerId,
+    Guid PlayerId,
+    Guid DefenseId) : IRequest<OneOf<Placement, Failure, NotFound>>;
+public record UpdatePlacementResponse(PlayerResponse Player, DefenseResponse Defense, TowerResponse Tower);
 public record PlayerResponse(Guid Id, string Name);
 public record TowerResponse(long Id, string Name);
 public record DefenseResponse(
@@ -22,9 +26,9 @@ public record MonsterResponse(long Id, string Name);
 
 public static class CreatePlacementMapper
 {
-    public static CreatePlacementResponse ToResponse(this Placement placement)
+    public static UpdatePlacementResponse ToResponse(this Placement placement)
     {
-        return new CreatePlacementResponse(placement.Player.ToResponse(), placement.Defense.ToResponse(), placement.Tower.ToResponse());
+        return new UpdatePlacementResponse(placement.Player.ToResponse(), placement.Defense.ToResponse(), placement.Tower.ToResponse());
     }
     
     private static PlayerResponse ToResponse(this Player player)

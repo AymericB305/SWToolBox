@@ -4,7 +4,7 @@ using OneOf;
 using OneOf.Types;
 using SWToolBox_api.Database;
 
-namespace SWToolBox_api.Features.Guilds.Placements.UpdatePlacementWinRate;
+namespace SWToolBox_api.Features.Guilds.ManagePlacements.UpdatePlacementWinRate;
 
 public class UpdatePlacementWinRateHandler(SwDbContext context) : IRequestHandler<UpdatePlacementWinRateCommand, OneOf<Success, NotFound>>
 {

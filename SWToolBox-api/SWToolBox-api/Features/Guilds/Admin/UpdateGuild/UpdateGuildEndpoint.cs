@@ -1,13 +1,11 @@
 ﻿using FastEndpoints;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace SWToolBox_api.Features.Guilds.UpdateGuild;
+namespace SWToolBox_api.Features.Guilds.Admin.UpdateGuild;
 
-[HttpPut("{guildId:guid}")]
-[Group<GuildsGroup>]
-[Authorize(Policy = "GuildAdmin")]
+[HttpPut("")]
+[Group<GuildAdminGroup>]
 public class UpdateGuildEndpoint(ISender sender) : Endpoint<UpdateGuildCommand, Results<Ok<UpdateGuildResponse>, NotFound, Conflict<string>>>
 {
     public override async Task<Results<Ok<UpdateGuildResponse>, NotFound, Conflict<string>>> ExecuteAsync(UpdateGuildCommand req, CancellationToken ct)

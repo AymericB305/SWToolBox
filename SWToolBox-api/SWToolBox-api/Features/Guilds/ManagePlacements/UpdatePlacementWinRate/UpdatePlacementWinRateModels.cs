@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OneOf.Types;
 
-namespace SWToolBox_api.Features.Guilds.Placements.UpdatePlacementWinRate;
+namespace SWToolBox_api.Features.Guilds.ManagePlacements.UpdatePlacementWinRate;
 
 public record UpdatePlacementWinRateCommand([FromRoute] Guid Id, short Wins, short Losses)
     : IRequest<OneOf<Success, NotFound>>;

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SWToolBox_api.Database;
 
-namespace SWToolBox_api.Features.Guilds.Authorization;
+namespace SWToolBox_api.Features.Guilds.Authorizations;
 
 public static class RegisterReadGuildDataPolicy
 {

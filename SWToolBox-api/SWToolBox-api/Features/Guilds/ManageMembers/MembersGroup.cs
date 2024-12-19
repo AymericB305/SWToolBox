@@ -8,7 +8,7 @@ public sealed class MembersGroup : SubGroup<GuildsGroup>
     {
         Configure("{guildId:guid}/players", ep =>
         {
-            ep.Policies("ManageMembers");
+            ep.Policies("ReadGuildData", "ManageMembers");
         });
     }
 }

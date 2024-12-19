@@ -6,7 +6,7 @@ using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database;
 using SWToolBox_api.Database.Entities;
 
-namespace SWToolBox_api.Features.Guilds.Defenses.UpdateDefense;
+namespace SWToolBox_api.Features.Guilds.ManageDefenses.UpdateDefense;
 
 public class UpdateDefenseHandler(SwDbContext context)
     : IRequestHandler<UpdateDefenseCommand, OneOf<Defense, NotFound, Existing>>

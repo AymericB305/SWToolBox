@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace SWToolBox_api.Features.Guilds.Placements.UpdatePlacement;
+namespace SWToolBox_api.Features.Guilds.ManagePlacements.UpdatePlacement;
 
 [HttpPut("{id:guid}")]
 [Group<PlacementsGroup>]

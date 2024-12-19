@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace SWToolBox_api.Features.Guilds.Placements.CreatePlacement;
+namespace SWToolBox_api.Features.Guilds.ManagePlacements.CreatePlacement;
 
 [HttpPost("")]
 [Group<PlacementsGroup>]

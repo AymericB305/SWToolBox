@@ -6,7 +6,7 @@ using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database;
 using SWToolBox_api.Database.Entities;
 
-namespace SWToolBox_api.Features.Guilds.Defenses.CreateDefense;
+namespace SWToolBox_api.Features.Guilds.ManageDefenses.CreateDefense;
 
 internal sealed class CreateDefenseHandler(SwDbContext context) : IRequestHandler<CreateDefenseCommand, OneOf<Defense, NotFound, Existing>>
 {

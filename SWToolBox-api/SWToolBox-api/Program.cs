@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SWToolBox_api.Database;
-using SWToolBox_api.Features.Guilds.Authorization;
+using SWToolBox_api.Features.Guilds.Admin.Authorizations;
+using SWToolBox_api.Features.Guilds.Authorizations;
 using SWToolBox_api.Features.Guilds.ManageMembers.Authorization;
 using SWToolBox_api.Features.Players.Authorization;
 

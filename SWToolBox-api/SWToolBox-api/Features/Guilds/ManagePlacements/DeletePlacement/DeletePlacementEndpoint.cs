@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace SWToolBox_api.Features.Guilds.Placements.DeletePlacement;
+namespace SWToolBox_api.Features.Guilds.ManagePlacements.DeletePlacement;
 
 [HttpDelete("{id:guid}")]
 [Group<PlacementsGroup>]

@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using SWToolBox_api.Database;
 
-namespace SWToolBox_api.Features.Guilds.Authorization;
+namespace SWToolBox_api.Features.Guilds.Authorizations;
 
-public static class RegisterGuildAdminPolicy
+public static class RegisterManageDefensesPolicy
 {
-    public static AuthorizationBuilder AddGuildAdminPolicy(this AuthorizationBuilder builder)
+    public static AuthorizationBuilder AddManageDefensesPolicy(this AuthorizationBuilder builder)
     {
-        return builder.AddPolicy("GuildAdmin", policy => policy.RequireAssertion(async context =>
+        return builder.AddPolicy("ManageDefenses", policy => policy.RequireAssertion(async context =>
         {
             var httpContextAccessor = context.Resource as HttpContext;
             var userId = context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -35,7 +35,7 @@ public static class RegisterGuildAdminPolicy
 
             var guildRankId = guild?.RankId;
 
-            return guildRankId > 3;
+            return guildRankId > 1;
         }));
     }
 }

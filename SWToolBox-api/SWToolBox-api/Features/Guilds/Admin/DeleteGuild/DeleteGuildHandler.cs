@@ -4,7 +4,7 @@ using OneOf;
 using OneOf.Types;
 using SWToolBox_api.Database;
 
-namespace SWToolBox_api.Features.Guilds.DeleteGuild;
+namespace SWToolBox_api.Features.Guilds.Admin.DeleteGuild;
 
 internal sealed class DeleteGuildHandler(SwDbContext context) : IRequestHandler<DeleteGuildCommand, OneOf<Success, NotFound>>
 {

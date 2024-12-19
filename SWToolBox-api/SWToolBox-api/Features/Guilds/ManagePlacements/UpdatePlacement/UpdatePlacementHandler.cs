@@ -6,16 +6,23 @@ using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database;
 using SWToolBox_api.Database.Entities;
 
-namespace SWToolBox_api.Features.Guilds.Placements.CreatePlacement;
+namespace SWToolBox_api.Features.Guilds.ManagePlacements.UpdatePlacement;
 
-internal sealed class CreatePlacementHandler(SwDbContext context) : IRequestHandler<CreatePlacementCommand, OneOf<Placement, Failure, NotFound>>
+public class UpdatePlacementHandler(SwDbContext context) : IRequestHandler<UpdatePlacementCommand, OneOf<Placement, Failure, NotFound>>
 {
-    public async Task<OneOf<Placement, Failure, NotFound>> Handle(CreatePlacementCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<Placement, Failure, NotFound>> Handle(UpdatePlacementCommand request, CancellationToken cancellationToken)
     {
         var guild = await context.Guilds
             .AsNoTracking()
             .FirstOrDefaultAsync(g => g.Id == request.GuildId, cancellationToken);
         if (guild is null)
+        {
+            return new NotFound();
+        }
+        
+        var placement = await context.Placements
+            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+        if (placement is null)
         {
             return new NotFound();
         }
@@ -53,15 +60,12 @@ internal sealed class CreatePlacementHandler(SwDbContext context) : IRequestHand
             return new Failure("This defense doesn't belong to this guild");
         }
         
-        var placement = await context.Placements.AddAsync(new Placement
-        {
-            DefenseId = request.DefenseId,
-            TowerId = request.TowerId,
-            PlayerId = request.PlayerId,
-        }, cancellationToken);
+        placement.DefenseId = request.DefenseId;
+        placement.TowerId = request.TowerId;
+        placement.PlayerId = request.PlayerId;
         
         await context.SaveChangesAsync(cancellationToken);
         
-        return placement.Entity;
+        return placement;
     }
 }

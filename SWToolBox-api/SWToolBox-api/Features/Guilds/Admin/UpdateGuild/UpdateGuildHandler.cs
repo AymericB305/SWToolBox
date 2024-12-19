@@ -6,7 +6,7 @@ using SWToolBox_api.Database;
 using SWToolBox_api.Database.Entities;
 using NotFound = OneOf.Types.NotFound;
 
-namespace SWToolBox_api.Features.Guilds.UpdateGuild;
+namespace SWToolBox_api.Features.Guilds.Admin.UpdateGuild;
 
 internal sealed class UpdateGuildHandler(SwDbContext context) : IRequestHandler<UpdateGuildCommand, OneOf<Guild, NotFound, Existing>>
 {

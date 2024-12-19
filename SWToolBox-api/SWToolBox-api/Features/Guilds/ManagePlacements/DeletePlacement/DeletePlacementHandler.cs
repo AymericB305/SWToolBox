@@ -4,7 +4,7 @@ using OneOf;
 using OneOf.Types;
 using SWToolBox_api.Database;
 
-namespace SWToolBox_api.Features.Guilds.Placements.DeletePlacement;
+namespace SWToolBox_api.Features.Guilds.ManagePlacements.DeletePlacement;
 
 public class DeletePlacementHandler(SwDbContext context) : IRequestHandler<DeletePlacementCommand, OneOf<Success, NotFound>>
 {

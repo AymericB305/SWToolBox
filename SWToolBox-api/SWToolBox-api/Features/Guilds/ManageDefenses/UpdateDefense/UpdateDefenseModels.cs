@@ -5,7 +5,7 @@ using OneOf.Types;
 using SWToolBox_api.Common.Models;
 using SWToolBox_api.Database.Entities;
 
-namespace SWToolBox_api.Features.Guilds.Defenses.UpdateDefense;
+namespace SWToolBox_api.Features.Guilds.ManageDefenses.UpdateDefense;
 
 public record UpdateDefenseCommand([FromRoute] Guid GuildId, [FromRoute] Guid Id, long MonsterLeadId, long Monster2Id, long Monster3Id, string Description)
     : IRequest<OneOf<Defense, NotFound, Existing>>;
