@@ -1,4 +1,5 @@
 ﻿using FastEndpoints;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
@@ -11,13 +12,22 @@ public record ChangePlayerRankCommand(
     [FromRoute] Guid GuildId,
     [FromRoute] Guid PlayerId) : IRequest<OneOf<GuildPlayer, NotFound>>
 {
-    [QueryParam]
+    [QueryParam] [FromQuery]
     public int RankId { get; init; }
 }
 
 public record ChangePlayerRankResponse(Guid PlayerId, RankResponse Rank);
-
 public record RankResponse(long Id, string Name);
+
+public class ChangePlayerRankValidator : Validator<ChangePlayerRankCommand>
+{
+    public ChangePlayerRankValidator()
+    {
+        RuleFor(x => x.RankId)
+            .InclusiveBetween(1, 4)
+            .WithMessage("Rank Id must be between 1 and than 4 (included)");
+    }
+}
 
 public static class ChangePlayerRankMapper
 {
