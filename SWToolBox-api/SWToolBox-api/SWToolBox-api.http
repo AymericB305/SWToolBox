@@ -33,8 +33,6 @@ Content-Type: application/json
   "name": "Bric305"
 }
 
-
-
 ###
 
 PUT {{players}}/4c7cf6a2-0b1d-4f54-a61d-fc72ddd5eefb
@@ -51,3 +49,15 @@ Authorization: Bearer {{jwt}}
 GET {{players}}/4c7cf6a2-0b1d-4f54-a61d-fc72ddd5eefb
 Accept: application/json
 Authorization: Bearer {{jwt}}
+
+###
+
+POST https://wppuuivsgzvzsfpvrrxu.supabase.co/auth/v1/token?grant_type=password
+Accept: application/json
+Content-Type: application/json
+apiKey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndwcHV1aXZzZ3p2enNmcHZycnh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NDYyMjMsImV4cCI6MjA1MDAyMjIyM30.YN408Rv9xCcjiM9nH2wG0t5NYTmfeNYw6HruhtlVvTk
+
+{
+  "email": "aymericbreton8535@gmail.com",
+  "password": ""
+}

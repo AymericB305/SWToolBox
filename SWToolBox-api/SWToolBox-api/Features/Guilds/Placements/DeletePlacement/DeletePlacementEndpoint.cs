@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 namespace SWToolBox_api.Features.Guilds.Placements.DeletePlacement;
 
 [HttpDelete("{id:guid}")]
+[Group<PlacementsGroup>]
 public class DeletePlacementEndpoint(ISender sender) : Endpoint<DeletePlacementCommand, Results<Ok, NotFound>>
 {
     public override async Task<Results<Ok, NotFound>> ExecuteAsync(DeletePlacementCommand req, CancellationToken ct)

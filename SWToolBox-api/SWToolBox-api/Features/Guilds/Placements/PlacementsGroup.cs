@@ -2,9 +2,9 @@
 
 namespace SWToolBox_api.Features.Guilds.Placements;
 
-public sealed class PlacementGroup : SubGroup<GuildsGroup>
+public sealed class PlacementsGroup : SubGroup<GuildsGroup>
 {
-    public PlacementGroup()
+    public PlacementsGroup()
     {
         Configure("{guildId:guid}/placements", ep =>
         {

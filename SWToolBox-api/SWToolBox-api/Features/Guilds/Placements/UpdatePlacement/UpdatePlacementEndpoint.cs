@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 namespace SWToolBox_api.Features.Guilds.Placements.UpdatePlacement;
 
 [HttpPut("{id:guid}")]
-[Group<PlacementGroup>]
+[Group<PlacementsGroup>]
 public class UpdatePlacementEndpoint(ISender sender) : Endpoint<UpdatePlacementCommand, Results<Ok<UpdatePlacementResponse>, NotFound, ProblemDetails>>
 {
     public override async Task<Results<Ok<UpdatePlacementResponse>, NotFound, ProblemDetails>> ExecuteAsync(UpdatePlacementCommand req, CancellationToken ct)

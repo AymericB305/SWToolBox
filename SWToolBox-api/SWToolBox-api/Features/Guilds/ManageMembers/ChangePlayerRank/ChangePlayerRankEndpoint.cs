@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace SWToolBox_api.Features.Guilds.ManageMembers.ChangePlayerRank;
 
-[HttpPatch("{playerId:guid}/rank/{rankId:long}")]
+[HttpPatch("{playerId:guid}/change-rank")]
 [Group<MembersGroup>]
 [Authorize(Policy = "ChangeRank")]
 public class ChangePlayerRankEndpoint(ISender sender) : Endpoint<ChangePlayerRankCommand, Results<Ok<ChangePlayerRankResponse>, NotFound>>

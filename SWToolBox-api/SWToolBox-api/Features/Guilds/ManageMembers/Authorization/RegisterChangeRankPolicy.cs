@@ -17,7 +17,7 @@ public static class RegisterChangeRankPolicy
                 return false;
             }
 
-            var routeGuildId = httpContextAccessor?.GetRouteData()?.Values["guildId"]?.ToString();
+            var routeGuildId = httpContextAccessor?.GetRouteData().Values["guildId"]?.ToString();
             if (routeGuildId is null)
             {
                 return false;
@@ -30,22 +30,20 @@ public static class RegisterChangeRankPolicy
                 .Include(p => p.GuildPlayers)
                 .FirstOrDefaultAsync(p => p.UserId == Guid.Parse(userId));
 
-            var guild = player?.GuildPlayers
+            var guildPlayer = player?.GuildPlayers
                 .FirstOrDefault(gp => gp.GuildId == Guid.Parse(routeGuildId));
-            if (guild is null)
+            if (guildPlayer is null)
             {
                 return false;
             }
             
-            var routeRankId = httpContextAccessor?.GetRouteData()?.Values["rankId"]?.ToString();
-            if (routeRankId is null)
+            var rankIdString = httpContextAccessor.Request.Query["rankId"].ToString();
+            if (!long.TryParse(rankIdString, out var rankId))
             {
                 return false;
             }
 
-            var guildRankId = guild.RankId;
-
-            return guildRankId > long.Parse(routeRankId);
+            return guildPlayer.RankId > rankId;
         }));
     }
 }
