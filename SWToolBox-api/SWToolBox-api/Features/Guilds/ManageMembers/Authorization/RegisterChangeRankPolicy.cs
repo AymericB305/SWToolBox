@@ -43,6 +43,11 @@ public static class RegisterChangeRankPolicy
                 return false;
             }
 
+            if (rankId == 4 && guildPlayer.RankId == 4)
+            {
+                return true;
+            }
+            
             return guildPlayer.RankId > rankId;
         }));
     }
