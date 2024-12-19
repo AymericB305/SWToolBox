@@ -28,7 +28,8 @@ builder.Services.AddAuthorizationBuilder()
     .AddReadGuildDataPolicy()
     .AddManageMembersPolicy()
     .AddChangeRankPolicy()
-    .AddManageDefensesPolicy();
+    .AddManageDefensesPolicy()
+    .AddGuildAdminPolicy();
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Authentication:JwtSecret"]!);
 builder.Services.AddAuthentication().AddJwtBearer(o =>
