@@ -15,6 +15,8 @@ internal sealed class GetGuildByIdHandler(SwDbContext context) : IRequestHandler
             .Guilds
             .Include(g => g.GuildPlayers)
                 .ThenInclude(gp => gp.Player)
+            .Include(g => g.GuildPlayers)
+                .ThenInclude(gp => gp.Rank)
             .Include(g => g.Defenses)
                 .ThenInclude(d => d.MonsterLead)
             .Include(g => g.Defenses)

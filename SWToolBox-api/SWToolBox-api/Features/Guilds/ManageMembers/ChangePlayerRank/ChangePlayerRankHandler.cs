@@ -12,6 +12,7 @@ public class ChangePlayerRankHandler(SwDbContext context) : IRequestHandler<Chan
     public async Task<OneOf<GuildPlayer, NotFound>> Handle(ChangePlayerRankCommand request, CancellationToken cancellationToken)
     {
         var guildPlayer = await context.GuildPlayers
+            .Include(gp => gp.Rank)
             .FirstOrDefaultAsync(gp => gp.GuildId == request.GuildId && gp.PlayerId == request.PlayerId, cancellationToken);
 
         if (guildPlayer is null)

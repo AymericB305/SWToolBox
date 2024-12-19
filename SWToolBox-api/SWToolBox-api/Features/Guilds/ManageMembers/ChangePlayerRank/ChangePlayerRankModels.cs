@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FastEndpoints;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OneOf.Types;
@@ -8,8 +9,11 @@ namespace SWToolBox_api.Features.Guilds.ManageMembers.ChangePlayerRank;
 
 public record ChangePlayerRankCommand(
     [FromRoute] Guid GuildId,
-    [FromRoute] Guid PlayerId,
-    [FromQuery] long RankId) : IRequest<OneOf<GuildPlayer, NotFound>>;
+    [FromRoute] Guid PlayerId) : IRequest<OneOf<GuildPlayer, NotFound>>
+{
+    [QueryParam]
+    public int RankId { get; init; }
+}
 
 public record ChangePlayerRankResponse(Guid PlayerId, RankResponse Rank);
 

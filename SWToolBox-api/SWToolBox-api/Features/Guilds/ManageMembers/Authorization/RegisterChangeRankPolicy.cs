@@ -38,7 +38,7 @@ public static class RegisterChangeRankPolicy
             }
             
             var rankIdString = httpContextAccessor.Request.Query["rankId"].ToString();
-            if (!long.TryParse(rankIdString, out var rankId))
+            if (!int.TryParse(rankIdString, out var rankId))
             {
                 return false;
             }
