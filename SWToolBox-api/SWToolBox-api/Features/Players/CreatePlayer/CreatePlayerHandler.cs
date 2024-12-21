@@ -16,11 +16,20 @@ public class CreatePlayerHandler(SwDbContext context) : IRequestHandler<CreatePl
         
         if (existingPlayer is not null)
         {
-            return new Existing();
+            if (existingPlayer.UserId is not null)
+            {
+                return new Existing();
+            }
+            
+            existingPlayer.UserId = request.UserId;
+            await context.SaveChangesAsync(cancellationToken);
+            
+            return existingPlayer;
         }
         
         var player = await context.Players
             .AddAsync(request.ToEntity(), cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         
         return player.Entity;
     }
