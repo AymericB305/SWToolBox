@@ -2,10 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace SWToolBox_api.Features.Guilds.ManageMembers.CreatePlayer;
+namespace SWToolBox_api.Features.Players.CreatePlayer;
 
-[HttpPost("")]
-[Group<MembersGroup>]
+[HttpPost("players")]
 public class CreatePlayerEndpoint(ISender sender) : Endpoint<CreatePlayerCommand, Results<Ok<CreatePlayerResponse>, Conflict<string>>>
 {
     public override async Task<Results<Ok<CreatePlayerResponse>, Conflict<string>>> ExecuteAsync(CreatePlayerCommand req, CancellationToken ct)
@@ -14,7 +13,7 @@ public class CreatePlayerEndpoint(ISender sender) : Endpoint<CreatePlayerCommand
 
         return playerOrExisting.Match<Results<Ok<CreatePlayerResponse>, Conflict<string>>>(
             player => TypedResults.Ok(player.ToResponse()),
-            existing => TypedResults.Conflict($"A Player with the name {req.Name} already exists in this guild.")
+            existing => TypedResults.Conflict($"A Player with the name {req.Name} already exists.")
         );
     }
 }
