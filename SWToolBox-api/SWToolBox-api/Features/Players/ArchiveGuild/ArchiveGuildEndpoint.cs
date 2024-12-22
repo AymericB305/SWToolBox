@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace SWToolBox_api.Features.Players.ArchiveGuild;
 
-[HttpPatch("{id:guid}/guilds/{guildId:guid}/archive")]
+[HttpPatch("{id:guid}/archive")]
 [Group<PlayersGroup>]
 public class ArchiveGuildEndpoint(ISender sender) : Endpoint<ArchiveGuildCommand, Results<Ok, NotFound>>
 {

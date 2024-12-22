@@ -5,4 +5,4 @@ using OneOf.Types;
 
 namespace SWToolBox_api.Features.Players.ArchiveGuild;
 
-public record ArchiveGuildCommand([FromRoute] Guid Id, [FromRoute] Guid GuildId) : IRequest<OneOf<Success, NotFound>>;
+public record ArchiveGuildCommand([FromRoute] Guid Id, Guid GuildId) : IRequest<OneOf<Success, NotFound>>;
