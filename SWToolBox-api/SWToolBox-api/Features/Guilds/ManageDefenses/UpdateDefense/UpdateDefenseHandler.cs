@@ -43,6 +43,10 @@ public class UpdateDefenseHandler(SwDbContext context)
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return defense;
+        return await context.Defenses
+            .Include(d => d.MonsterLead)
+            .Include(d => d.Monster2)
+            .Include(d => d.Monster3)
+            .FirstAsync(d => d.Id == defense.Id, cancellationToken);;
     }
 }

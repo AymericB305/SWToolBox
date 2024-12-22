@@ -15,10 +15,12 @@ internal sealed class GetPlayerByIdHandler(SwDbContext context)
         var player = await context.Players
             .Include(p => p.GuildPlayers
                 .Where(gp => !gp.IsHiddenByGuild && !gp.IsArchivedByPlayer)
-                .OrderBy(gp => gp.LeftAt == null)
+                .OrderByDescending(gp => gp.LeftAt == null)
                     .ThenByDescending(gp => gp.JoinedAt)
                     .ThenByDescending(gp => gp.LeftAt))
                 .ThenInclude(gp => gp.Guild)
+            .Include(p => p.GuildPlayers)
+                .ThenInclude(gp => gp.Rank)
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 

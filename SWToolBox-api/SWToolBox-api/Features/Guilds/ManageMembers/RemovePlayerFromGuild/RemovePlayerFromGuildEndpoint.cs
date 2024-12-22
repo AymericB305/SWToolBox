@@ -17,12 +17,12 @@ public class RemovePlayerFromGuildEndpoint(ISender sender) : Endpoint<RemovePlay
             failure =>
             {
                 AddError(r => r.Id, failure.ErrorMessage);
-                return new ProblemDetails();
+                return new ProblemDetails(ValidationFailures);
             },
             notFound =>
             {
                 AddError(r => r.Id, "Player wasn't part of this guild.");
-                return new ProblemDetails();
+                return new ProblemDetails(ValidationFailures);
             }
         );
     }

@@ -90,6 +90,8 @@ app.UseFastEndpoints(config =>
     config.Versioning.Prefix = "v";
     config.Versioning.DefaultVersion = 1;
     config.Versioning.PrependToRoute = true;
+    
+    config.Errors.UseProblemDetails();
 }).UseSwaggerGen();
 
 app.Run();

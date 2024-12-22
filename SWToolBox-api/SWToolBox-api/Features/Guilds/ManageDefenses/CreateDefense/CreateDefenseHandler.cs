@@ -34,7 +34,11 @@ internal sealed class CreateDefenseHandler(SwDbContext context) : IRequestHandle
         var defense = await context.Defenses
             .AddAsync(request.ToEntity(), cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
-            
-        return defense.Entity;
+
+        return await context.Defenses
+            .Include(d => d.MonsterLead)
+            .Include(d => d.Monster2)
+            .Include(d => d.Monster3)
+            .FirstAsync(d => d.Id == defense.Entity.Id, cancellationToken);
     }
 }

@@ -58,7 +58,17 @@ internal sealed class CreatePlacementHandler(SwDbContext context) : IRequestHand
         var placement = await context.Placements
             .AddAsync(request.ToEntity(), cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
-        
-        return placement.Entity;
+
+        return await context.Placements
+            .Include(p => p.Player)
+            .Include(p => p.Tower)
+                .ThenInclude(t => t.Team)
+            .Include(p => p.Defense)
+                .ThenInclude(d => d.MonsterLead)
+            .Include(p => p.Defense)
+                .ThenInclude(d => d.Monster2)
+            .Include(p => p.Defense)
+                .ThenInclude(d => d.Monster3)
+            .FirstAsync(p => p.Id == placement.Entity.Id, cancellationToken);
     }
 }

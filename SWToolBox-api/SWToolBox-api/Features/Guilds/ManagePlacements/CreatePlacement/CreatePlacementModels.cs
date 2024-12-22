@@ -19,6 +19,7 @@ public record DefenseResponse(
     MonsterResponse Monster2,
     MonsterResponse Monster3,
     string Description);
+
 public record MonsterResponse(long Id, string Name);
 
 public static class CreatePlacementMapper
@@ -32,11 +33,15 @@ public static class CreatePlacementMapper
             PlayerId = command.PlayerId,
         };
     }
+
     public static CreatePlacementResponse ToResponse(this Placement placement)
     {
-        return new CreatePlacementResponse(placement.Player.ToResponse(), placement.Defense.ToResponse(), placement.Tower.ToResponse());
+        return new CreatePlacementResponse(
+            placement.Player.ToResponse(),
+            placement.Defense.ToResponse(),
+            placement.Tower.ToResponse());
     }
-    
+
     private static PlayerResponse ToResponse(this Player player)
     {
         return new PlayerResponse(

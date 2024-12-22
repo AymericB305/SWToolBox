@@ -17,7 +17,7 @@ public class UpdatePlacementEndpoint(ISender sender) : Endpoint<UpdatePlacementC
             failure =>
             {
                 AddError(failure.ErrorMessage);
-                return new ProblemDetails();
+                return new ProblemDetails(ValidationFailures);
             },
             notFound => TypedResults.NotFound()
         );

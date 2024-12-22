@@ -68,6 +68,16 @@ public class UpdatePlacementHandler(SwDbContext context) : IRequestHandler<Updat
         placement.PlayerId = request.PlayerId;
         await context.SaveChangesAsync(cancellationToken);
         
-        return placement;
+        return await context.Placements
+            .Include(p => p.Player)
+            .Include(p => p.Tower)
+                .ThenInclude(t => t.Team)
+            .Include(p => p.Defense)
+                .ThenInclude(d => d.MonsterLead)
+            .Include(p => p.Defense)
+                .ThenInclude(d => d.Monster2)
+            .Include(p => p.Defense)
+                .ThenInclude(d => d.Monster3)
+            .FirstAsync(p => p.Id == placement.Id, cancellationToken);;
     }
 }

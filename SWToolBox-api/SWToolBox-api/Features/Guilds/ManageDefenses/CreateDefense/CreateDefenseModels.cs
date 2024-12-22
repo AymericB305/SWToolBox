@@ -50,6 +50,7 @@ public static class CreateDefenseMapper
             Monster2Id = command.Monster2Id,
             Monster3Id = command.Monster3Id,
             Description = command.Description,
+            GuildId = command.GuildId,
         };
     }
 
