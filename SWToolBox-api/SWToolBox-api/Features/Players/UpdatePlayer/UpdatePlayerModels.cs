@@ -9,6 +9,7 @@ using SWToolBox_api.Database.Entities;
 namespace SWToolBox_api.Features.Players.UpdatePlayer;
 
 public record UpdatePlayerCommand([FromRoute] Guid Id, string Name) : IRequest<OneOf<Player, NotFound>>;
+
 public record UpdatePlayerResponse(Guid Id, string Name);
 
 public class CreatePlayerValidator : Validator<UpdatePlayerCommand>

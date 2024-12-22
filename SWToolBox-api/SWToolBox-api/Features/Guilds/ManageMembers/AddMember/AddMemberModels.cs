@@ -9,7 +9,9 @@ using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Guilds.ManageMembers.AddMember;
 
-public record AddMemberCommand([FromRoute] Guid GuildId, Guid? PlayerId, string Name) : IRequest<OneOf<Player, Existing, NotFound>>;
+public record AddMemberCommand([FromRoute] Guid GuildId, Guid? PlayerId, string Name)
+    : IRequest<OneOf<Player, Existing, NotFound>>;
+
 public record AddMemberResponse(Guid Id, string Name);
 
 public class AddMemberValidator : Validator<AddMemberCommand>

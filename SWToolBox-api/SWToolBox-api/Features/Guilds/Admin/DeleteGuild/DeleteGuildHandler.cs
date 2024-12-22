@@ -10,7 +10,9 @@ internal sealed class DeleteGuildHandler(SwDbContext context) : IRequestHandler<
 {
     public async Task<OneOf<Success, NotFound>> Handle(DeleteGuildCommand request, CancellationToken cancellationToken)
     {
-        var guild = await context.Guilds.FirstOrDefaultAsync(g => g.Id == request.GuildId, cancellationToken);
+        var guild = await context.Guilds
+            .FirstOrDefaultAsync(g => g.Id == request.GuildId, cancellationToken);
+        
         if (guild is null)
         {
             return new NotFound();

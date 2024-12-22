@@ -11,14 +11,16 @@ internal sealed class CreateGuildHandler(SwDbContext context) : IRequestHandler<
 {
     public async Task<OneOf<Guild, Existing>> Handle(CreateGuildCommand request, CancellationToken cancellationToken)
     {
-        var existingGuild = await context.Guilds.FirstOrDefaultAsync(g => g.Name == request.Name, cancellationToken);
+        var existingGuild = await context.Guilds
+            .FirstOrDefaultAsync(g => g.Name == request.Name, cancellationToken);
 
         if (existingGuild is not null)
         {
             return new Existing();
         }
         
-        var guild = await context.Guilds.AddAsync(request.ToEntity(), cancellationToken);
+        var guild = await context.Guilds
+            .AddAsync(request.ToEntity(), cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
         return guild.Entity;

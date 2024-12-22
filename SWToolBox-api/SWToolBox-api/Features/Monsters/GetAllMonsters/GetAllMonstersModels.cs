@@ -1,7 +1,10 @@
 ﻿using FastEndpoints;
+using MediatR;
 using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Monsters.GetAllMonsters;
+
+public record GetAllMonstersQuery : IRequest<IEnumerable<Monster>>;
 
 public record GetAllMonstersResponse(IEnumerable<MonsterResponse> Monsters);
 public record MonsterResponse(long Id, string Name, string Element, MonsterResponseLeaderSkill? LeaderSkill);

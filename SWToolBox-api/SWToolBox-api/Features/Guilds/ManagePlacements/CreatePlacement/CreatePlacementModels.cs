@@ -9,6 +9,7 @@ namespace SWToolBox_api.Features.Guilds.ManagePlacements.CreatePlacement;
 
 public record CreatePlacementCommand([FromRoute] Guid GuildId, long TowerId, Guid PlayerId, Guid DefenseId)
     : IRequest<OneOf<Placement, Failure, NotFound>>;
+
 public record CreatePlacementResponse(PlayerResponse Player, DefenseResponse Defense, TowerResponse Tower);
 public record PlayerResponse(Guid Id, string Name);
 public record TowerResponse(long Id, string Name);
@@ -22,6 +23,15 @@ public record MonsterResponse(long Id, string Name);
 
 public static class CreatePlacementMapper
 {
+    public static Placement ToEntity(this CreatePlacementCommand command)
+    {
+        return new Placement
+        {
+            DefenseId = command.DefenseId,
+            TowerId = command.TowerId,
+            PlayerId = command.PlayerId,
+        };
+    }
     public static CreatePlacementResponse ToResponse(this Placement placement)
     {
         return new CreatePlacementResponse(placement.Player.ToResponse(), placement.Defense.ToResponse(), placement.Tower.ToResponse());

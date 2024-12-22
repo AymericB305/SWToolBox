@@ -8,6 +8,7 @@ using OneOf;
 namespace SWToolBox_api.Features.Players.CreatePlayer;
 
 public record CreatePlayerCommand(string Name, Guid UserId) : IRequest<OneOf<Player, Existing>>;
+
 public record CreatePlayerResponse(Guid Id, string Name);
 
 public class CreatePlayerValidator : Validator<CreatePlayerCommand>

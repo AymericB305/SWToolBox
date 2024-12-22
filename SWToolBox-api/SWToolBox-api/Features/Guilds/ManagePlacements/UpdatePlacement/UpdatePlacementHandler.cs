@@ -13,8 +13,8 @@ public class UpdatePlacementHandler(SwDbContext context) : IRequestHandler<Updat
     public async Task<OneOf<Placement, Failure, NotFound>> Handle(UpdatePlacementCommand request, CancellationToken cancellationToken)
     {
         var guild = await context.Guilds
-            .AsNoTracking()
             .FirstOrDefaultAsync(g => g.Id == request.GuildId, cancellationToken);
+        
         if (guild is null)
         {
             return new NotFound();
@@ -22,14 +22,15 @@ public class UpdatePlacementHandler(SwDbContext context) : IRequestHandler<Updat
         
         var placement = await context.Placements
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+        
         if (placement is null)
         {
             return new NotFound();
         }
         
         var player = await context.Players
-            .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == request.PlayerId, cancellationToken);
+        
         if (player is null)
         {
             return new Failure("Player not found");
@@ -37,8 +38,8 @@ public class UpdatePlacementHandler(SwDbContext context) : IRequestHandler<Updat
         
         var tower = await context.Towers
             .Include(t => t.Placements)
-            .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Id == request.TowerId, cancellationToken);
+        
         if (tower is null)
         {
             return new Failure("Tower not found");
@@ -49,7 +50,9 @@ public class UpdatePlacementHandler(SwDbContext context) : IRequestHandler<Updat
             return new Failure("This tower already contains too many defenses");
         }
         
-        var defense = await context.Defenses.FirstOrDefaultAsync(d => d.Id == request.DefenseId, cancellationToken);
+        var defense = await context.Defenses
+            .FirstOrDefaultAsync(d => d.Id == request.DefenseId, cancellationToken);
+        
         if (defense is null)
         {
             return new Failure("Defense not found");
@@ -63,7 +66,6 @@ public class UpdatePlacementHandler(SwDbContext context) : IRequestHandler<Updat
         placement.DefenseId = request.DefenseId;
         placement.TowerId = request.TowerId;
         placement.PlayerId = request.PlayerId;
-        
         await context.SaveChangesAsync(cancellationToken);
         
         return placement;

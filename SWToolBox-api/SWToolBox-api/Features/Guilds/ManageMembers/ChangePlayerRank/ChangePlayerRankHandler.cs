@@ -19,7 +19,9 @@ public class ChangePlayerRankHandler(SwDbContext context) : IRequestHandler<Chan
             return new NotFound();
         }
         
-        var rank = await context.Ranks.FirstOrDefaultAsync(r => r.Id == request.RankId, cancellationToken);
+        var rank = await context.Ranks
+            .FirstOrDefaultAsync(r => r.Id == request.RankId, cancellationToken);
+        
         guildPlayer.Rank = rank!;
         guildPlayer.RankId = request.RankId;
         await context.SaveChangesAsync(cancellationToken);

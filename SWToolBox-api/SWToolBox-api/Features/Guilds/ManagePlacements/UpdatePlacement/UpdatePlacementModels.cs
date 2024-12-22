@@ -13,6 +13,7 @@ public record UpdatePlacementCommand(
     long TowerId,
     Guid PlayerId,
     Guid DefenseId) : IRequest<OneOf<Placement, Failure, NotFound>>;
+
 public record UpdatePlacementResponse(PlayerResponse Player, DefenseResponse Defense, TowerResponse Tower);
 public record PlayerResponse(Guid Id, string Name);
 public record TowerResponse(long Id, string Name);

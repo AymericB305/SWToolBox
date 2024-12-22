@@ -12,6 +12,7 @@ public class DeletePlacementHandler(SwDbContext context) : IRequestHandler<Delet
     {
         var placement = await context.Placements
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+        
         if (placement is null)
         {
             return new NotFound();

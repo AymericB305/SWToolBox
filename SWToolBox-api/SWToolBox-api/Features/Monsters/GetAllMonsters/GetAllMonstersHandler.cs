@@ -5,8 +5,6 @@ using SWToolBox_api.Database.Entities;
 
 namespace SWToolBox_api.Features.Monsters.GetAllMonsters;
 
-public record GetAllMonstersQuery : IRequest<IEnumerable<Monster>>;
-
 internal sealed class GetAllMonstersHandler(SwDbContext context)
     : IRequestHandler<GetAllMonstersQuery, IEnumerable<Monster>>
 {

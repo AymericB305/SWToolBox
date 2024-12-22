@@ -22,7 +22,7 @@ internal sealed class AddMemberHandler(SwDbContext context) : IRequestHandler<Ad
                 return new NotFound();
             }
             
-            await AddGuildPlayer(request.GuildId, player, cancellationToken);
+            await AddGuildPlayerAndSave(request.GuildId, player, cancellationToken);
         
             return player;
         }
@@ -38,18 +38,20 @@ internal sealed class AddMemberHandler(SwDbContext context) : IRequestHandler<Ad
                 return new Existing();
             }
             
-            await AddGuildPlayer(request.GuildId, existingPlayer, cancellationToken);
+            await AddGuildPlayerAndSave(request.GuildId, existingPlayer, cancellationToken);
 
             return existingPlayer;
         }
         
-        var newPlayer = await context.Players.AddAsync(request.ToEntity(), cancellationToken);
-        await AddGuildPlayer(request.GuildId, newPlayer.Entity, cancellationToken);
+        var newPlayer = await context.Players
+            .AddAsync(request.ToEntity(), cancellationToken);
+        
+        await AddGuildPlayerAndSave(request.GuildId, newPlayer.Entity, cancellationToken);
         
         return newPlayer.Entity;
     }
 
-    private async Task AddGuildPlayer(Guid guildId, Player existingPlayer, CancellationToken cancellationToken)
+    private async Task AddGuildPlayerAndSave(Guid guildId, Player existingPlayer, CancellationToken cancellationToken)
     {
         var guildPlayer = new GuildPlayer
         {

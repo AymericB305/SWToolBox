@@ -8,6 +8,7 @@ using SWToolBox_api.Database.Entities;
 namespace SWToolBox_api.Features.Guilds.CreateGuild;
 
 public record CreateGuildCommand(string Name) : IRequest<OneOf<Guild, Existing>>;
+
 public record CreateGuildResponse(Guid Id, string Name);
 
 public class CreateGuildValidator : Validator<CreateGuildCommand>

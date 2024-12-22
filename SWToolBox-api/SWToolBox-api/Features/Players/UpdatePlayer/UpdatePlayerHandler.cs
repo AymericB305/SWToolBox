@@ -13,6 +13,7 @@ public class UpdatePlayerHandler(SwDbContext context) : IRequestHandler<UpdatePl
     {
         var player = await context.Players
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+        
         if (player is null)
         {
             return new NotFound();

@@ -12,7 +12,8 @@ internal sealed class CreateDefenseHandler(SwDbContext context) : IRequestHandle
 {
     public async Task<OneOf<Defense, NotFound, Existing>> Handle(CreateDefenseCommand request, CancellationToken cancellationToken)
     {
-        var guild = await context.Guilds.FirstOrDefaultAsync(g => g.Id == request.GuildId, cancellationToken);
+        var guild = await context.Guilds
+            .FirstOrDefaultAsync(g => g.Id == request.GuildId, cancellationToken);
 
         if (guild is null)
         {
@@ -30,14 +31,8 @@ internal sealed class CreateDefenseHandler(SwDbContext context) : IRequestHandle
             return new Existing();
         }
 
-        var defense = await context.Defenses.AddAsync(new Defense
-        {
-            MonsterLeadId = request.MonsterLeadId,
-            Monster2Id = request.Monster2Id,
-            Monster3Id = request.Monster3Id,
-            Description = request.Description,
-        }, cancellationToken);
-        
+        var defense = await context.Defenses
+            .AddAsync(request.ToEntity(), cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
             
         return defense.Entity;

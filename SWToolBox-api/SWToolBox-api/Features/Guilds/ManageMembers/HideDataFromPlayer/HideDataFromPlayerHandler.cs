@@ -20,6 +20,7 @@ public class HideDataFromPlayerHandler(SwDbContext context) : IRequestHandler<Hi
         
         guildPlayer.IsHiddenByGuild = true;
         await context.SaveChangesAsync(cancellationToken);
+        
         return new Success();
     }
 }

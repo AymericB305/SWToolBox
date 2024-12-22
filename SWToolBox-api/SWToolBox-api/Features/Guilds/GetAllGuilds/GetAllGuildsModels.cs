@@ -4,6 +4,7 @@ using SWToolBox_api.Database.Entities;
 namespace SWToolBox_api.Features.Guilds.GetAllGuilds;
 
 public record GetAllGuildsQuery : IRequest<IEnumerable<Guild>>;
+
 public record GetAllGuildsResponse(IEnumerable<GuildResponse> Guilds);
 public record GuildResponse(Guid Id, string Name);
 
