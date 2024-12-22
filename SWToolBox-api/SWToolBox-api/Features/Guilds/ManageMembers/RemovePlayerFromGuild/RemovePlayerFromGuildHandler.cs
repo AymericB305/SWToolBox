@@ -26,6 +26,7 @@ internal sealed class RemovePlayerFromGuildHandler(SwDbContext context) : IReque
         }
         
         guildPlayer.LeftAt = DateTime.Now;
+        guildPlayer.IsHiddenByGuild = request.HideData;
         await context.SaveChangesAsync(cancellationToken);
         
         return new Success();
