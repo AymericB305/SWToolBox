@@ -1,6 +1,54 @@
 @SWToolBox_api_HostAddress = http://localhost:5178
 
-GET {{SWToolBox_api_HostAddress}}/weatherforecast/
+@guilds = {{SWToolBox_api_HostAddress}}/api/v1/guilds
+@players = {{SWToolBox_api_HostAddress}}/api/v1/players
+@jwt = eyJhbGciOiJIUzI1NiIsImtpZCI6IlVXUXNEeENkWE9FSWkvRGciLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3dwcHV1aXZzZ3p2enNmcHZycnh1LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJlMzZlN2Y4ZC02YzA2LTQ3MDMtYjQ5YS04NDkwNWM2NDU5ZWUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzM0ODI5NTYzLCJpYXQiOjE3MzQ4MjU5NjMsImVtYWlsIjoiYXltZXJpY2JyZXRvbjg1MzVAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6e30sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3MzQ4MjU5NjN9XSwic2Vzc2lvbl9pZCI6IjhiYWIwYjc1LWM2NjktNDAxMS1hM2VkLWJmMGM0MTI5N2QzMSIsImlzX2Fub255bW91cyI6ZmFsc2V9.nAcMLkWIoJ1b0jThOozCQUlbddLdUGKTw3Yxoq7UGDI
+
+POST {{guilds}}
 Accept: application/json
+Content-Type: application/json
+
+{
+ "name": "Totototo"
+}
+
+###
+
+GET {{guilds}}
+Accept: application/json
+Authorization: Bearer {{jwt}}
+
+###
+
+GET {{guilds}}/a0bfef78-2af1-4722-85d3-950c333c98de
+Accept: application/json
+Authorization: Bearer {{jwt}}
+
+###
+
+POST {{guilds}}/a0bfef78-2af1-4722-85d3-950c333c98de/players
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Bric305"
+}
+
+###
+
+PUT {{players}}/4c7cf6a2-0b1d-4f54-a61d-fc72ddd5eefb
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{jwt}}
+
+{
+  "name": "Bric305"
+}
+
+### 
+
+GET {{players}}/4c7cf6a2-0b1d-4f54-a61d-fc72ddd5eefb
+Accept: application/json
+Authorization: Bearer {{jwt}}
 
 ###
