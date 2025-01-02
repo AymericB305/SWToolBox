@@ -1,6 +1,5 @@
 ﻿using FastEndpoints;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace SWToolBox_api.Features.Guilds.GetAllGuilds;
