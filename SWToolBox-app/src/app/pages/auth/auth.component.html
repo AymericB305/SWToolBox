@@ -1,0 +1,65 @@
+<div class="flex justify-center items-center h-screen bg-gray-100">
+  <p-card class="w-96">
+    <h2 class="text-center text-2xl font-bold mb-6">
+      {{ isSignUp() ? 'Sign Up' : 'Sign In' }}
+    </h2>
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          class="w-full"
+          required
+        />
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <p-password
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          [feedback]="false"
+          class="w-full"
+          required
+        ></p-password>
+      </div>
+      @if(isSignUp()) {
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
+            Confirm Password
+          </label>
+          <p-password
+            id="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            [feedback]="false"
+            class="w-full"
+            required
+          ></p-password>
+        </div>
+      }
+      <div class="flex justify-between items-center">
+        <p-button
+          type="submit"
+          label="{{ isSignUp() ? 'Sign Up' : 'Sign In' }}"
+          styleClass="p-button-primary"
+        ></p-button>
+        <p-button
+          type="button"
+          label="{{ isSignUp() ? 'Switch to Sign In' : 'Switch to Sign Up' }}"
+          styleClass="p-button-text"
+          (click)="toggleSignUp()"
+        ></p-button>
+      </div>
+    </form>
+    @if(errorMessage()) {
+      <p-message severity="error" class="mt-4">
+        {{ errorMessage() }}
+      </p-message>
+    }
+  </p-card>
+</div>
