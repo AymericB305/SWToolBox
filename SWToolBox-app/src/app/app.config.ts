@@ -1,5 +1,5 @@
 import {ApplicationConfig, provideExperimentalZonelessChangeDetection} from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {provideRouter, withComponentInputBinding} from '@angular/router';
 
 import { routes } from './app.routes';
 import {provideHttpClient, withInterceptors} from "@angular/common/http";
@@ -11,7 +11,7 @@ import Aura from '@primeng/themes/aura';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimationsAsync(),
     providePrimeNG({
