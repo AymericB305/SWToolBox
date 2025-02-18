@@ -1,1 +1,31 @@
-<p>member works!</p>
+<p-table [value]="members()" responsiveLayout="scroll">
+  <ng-template pTemplate="header">
+    <tr>
+      <th></th>
+      <th>Name</th>
+      <th>Join Date</th>
+      <th>Leaving Date</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-member>
+    <tr>
+      <td>
+        @switch (member.rank.id) {
+          @case (2) {
+            <i class="pi pi-star" title="Elder Member"></i>
+          }
+          @case (3) {
+            <i class="pi pi-shield" title="Leader"></i>
+          }
+          @case (4) {
+            <i class="pi pi-crown" title="Founder"></i>
+          }
+        }
+      </td>
+      <td>{{ member.name }}</td>
+      <td>{{ member.joinedAt | date }}</td>
+      <td>{{ member.leftAt ? (member.leftAt | date) : '' }}</td>
+    </tr>
+  </ng-template>
+</p-table>
+

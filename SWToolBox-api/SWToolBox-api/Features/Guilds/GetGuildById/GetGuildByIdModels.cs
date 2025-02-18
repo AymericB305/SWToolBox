@@ -11,9 +11,9 @@ public record GetGuildByIdQuery([FromRoute] Guid GuildId) : IRequest<OneOf<Guild
 public record GetGuildByIdResponse(
     Guid Id,
     string Name,
-    IEnumerable<PlayerResponse> Players,
+    IEnumerable<MemberResponse> Members,
     IEnumerable<DefenseResponse> Defenses);
-public record PlayerResponse(Guid Id, string Name, DateTime JoinedAt, DateTime? LeftAt, RankResponse Rank);
+public record MemberResponse(Guid Id, string Name, DateTime JoinedAt, DateTime? LeftAt, RankResponse Rank);
 public record DefenseResponse(
     Guid Id,
     MonsterResponse MonsterLead,
@@ -38,9 +38,9 @@ public static class GetGuildByIdMapper
         );
     }
 
-    private static PlayerResponse ToResponse(this Player player, DateTime joinedAt, DateTime? leftAt, Rank rank)
+    private static MemberResponse ToResponse(this Player player, DateTime joinedAt, DateTime? leftAt, Rank rank)
     {
-        return new PlayerResponse(
+        return new MemberResponse(
             player.Id,
             player.Name,
             joinedAt,

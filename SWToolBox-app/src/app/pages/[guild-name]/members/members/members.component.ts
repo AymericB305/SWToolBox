@@ -1,44 +1,40 @@
-import {ChangeDetectionStrategy, Component, effect, inject, input, linkedSignal} from '@angular/core';
-import {MeService} from "../../../../shared/services/me.service";
-import {HttpClient} from "@angular/common/http";
-import {rxResource} from "@angular/core/rxjs-interop";
-import {EMPTY} from "rxjs";
+import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
+import {TableModule} from "primeng/table";
+import {GuildService} from "../../guild.service";
+import {DatePipe} from "@angular/common";
+import {TreeTableModule} from "primeng/treetable";
 
 @Component({
   selector: 'app-members',
-  imports: [],
+  imports: [
+    TableModule,
+    DatePipe,
+    TreeTableModule
+  ],
   templateUrl: './members.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MembersComponent {
-  guildName = input.required<string>();
 
-  private meService = inject(MeService);
+  private guildService = inject(GuildService);
 
-  me = this.meService.me;
-
-  guild = linkedSignal({
-    source: () => ({ guildName: this.guildName(), me: this.me() }),
-    computation: ({ guildName, me }) => {
-      return me?.guilds?.find(g => g.name === guildName);
-    }
-  });
-
-  private http = inject(HttpClient);
-
-  guildData = rxResource({
-    request: this.guild,
-    loader: ({ request }) => {
-      if (request) {
-        return this.http.get('http://localhost:5178/api/v1/guilds/' + request.id);
-      }
-      return EMPTY;
-    },
-  });
-
-  a = effect(() => {
-    console.log("guild", this.guild())
-    console.log("data", this.guildData.value())
-  });
+  members = computed(() => this.guildService.members())
+  towers = computed(() => this.guildService.towers())
+  // treeData = computed(() => this.towers().map(tower => ({
+  //   data: {
+  //     name: tower.name,
+  //   },
+  //   children: tower.defenses.map(defense => ({
+  //     data: {
+  //       monsterLead: defense.monsterLead.name,
+  //       monster2: defense.monster2.name,
+  //       monster3: defense.monster3.name,
+  //       description: defense.description,
+  //       player: defense.player,
+  //       wins: defense.wins,
+  //       losses: defense.losses,
+  //     },
+  //   })),
+  // })))
 }

@@ -1,7 +1,7 @@
-import {inject, Injectable} from '@angular/core';
+import {computed, inject, Injectable, signal} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
-import {toSignal} from "@angular/core/rxjs-interop";
+import {tap} from "rxjs";
 
 export interface MeState {
   id: string;
@@ -31,7 +31,11 @@ export class MeService {
   private apiUrl = environment.apiUrl;
   private meUri = environment.meUri;
 
-  me = toSignal(this.http.get<MeState>(`${this.apiUrl}/${this.meUri}`));
+  private writableMe = signal<MeState | undefined>(undefined);
+  me = computed(() => this.writableMe());
 
-  constructor() { }
+  loadMe() {
+    return this.http.get<MeState>(`${this.apiUrl}/${this.meUri}`)
+      .pipe(tap(me => this.writableMe.set(me)));
+  }
 }
